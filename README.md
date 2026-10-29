@@ -1,6 +1,6 @@
 # Hunter-Skill
 
-个人 Skill 存储与版本管理。
+尽情创造。
 
 ## 已收录
 
