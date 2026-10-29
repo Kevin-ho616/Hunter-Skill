@@ -1,0 +1,4 @@
+interface:
+  display_name: "Brand VI manual"
+  short_description: "将定稿 Logo 与品牌简报制作为 16:9 PPTX 商业 VI 手册"
+  default_prompt: "Use $brand-vi-manual to turn my finalized logo and brand brief into a 16:9 PPTX commercial VI visual-system manual with standards, applications, and mockups."
