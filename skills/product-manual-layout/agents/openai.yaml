@@ -1,0 +1,4 @@
+interface:
+  display_name: "产品手册分层排版"
+  short_description: "结合 GPT Image 素材与矢量排版，按装订对页制作可编辑及可印刷的产品手册"
+  default_prompt: "请使用 $product-manual-layout，先梳理我的产品手册规格、装订方式与素材，再按封面独立、内页对页的逻辑制作分层可编辑、适合印刷的手册。"
