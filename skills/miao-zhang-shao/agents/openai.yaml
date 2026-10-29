@@ -1,0 +1,4 @@
+interface:
+  display_name: "喵掌勺"
+  short_description: "黑白英短美食喜剧：联动 LibTV 从食材制作到成菜，再生成安全裁切封面"
+  default_prompt: "使用 $miao-zhang-shao 制作一道菜的黑白英短搞笑短片，黑猫更夸张、节奏更快，通过 LibTV 生成视频并完成喵掌勺封面。"
