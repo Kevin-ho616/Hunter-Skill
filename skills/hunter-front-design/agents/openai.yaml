@@ -1,4 +1,4 @@
 interface:
   display_name: "猎人字体设计"
-  short_description: "从设计原则与网格样字到完整字符集、风格审校、可安装字体和离线试排"
-  default_prompt: "使用 $hunter-front-design，先定义设计原则并给出网格样字，再按已确认方向扩展字符集、检查风格一致性，导出字体并生成试排工具。"
+  short_description: "先确认风格并提供三案选样，再完成网格样字、完整字符集、可安装字体和离线试排"
+  default_prompt: "使用 $hunter-front-design，先确认风格并生成三种可比较的初步效果，待我选定后制定设计原则、绘制网格样字，再扩展字符集、导出字体并生成试排工具；已有选定方向或明确要求跳过选样时直接续做。"
