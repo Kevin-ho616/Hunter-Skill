@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>字体试排 · 本地字体工具</title>
+<style>
+:root{--ink:#161616;--muted:#737373;--line:#dededb;--panel:#f7f7f5;--accent:#e95f29;--radius:5px}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}button,input,textarea,select{font:inherit}button,a,select{touch-action:manipulation}button,.button{cursor:pointer;border:1px solid #c8c8c5;border-radius:var(--radius);background:white;padding:8px 17px;color:var(--ink);text-decoration:none;text-align:center;font-weight:500}button:hover,.button:hover{background:#efefed}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #ed602c70;outline-offset:3px}.primary{background:var(--ink);color:white;border-color:var(--ink)}.primary:hover{background:#333}.header{height:80px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid var(--line);gap:20px}.brand{display:flex;align-items:baseline;gap:17px}.brand h1{font-size:24px;letter-spacing:-.03em;margin:0}.brand span{color:var(--muted);font-size:13px}.actions{display:flex;gap:10px}.layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:calc(100vh - 80px)}.sidebar{padding:24px;background:var(--panel);border-right:1px solid var(--line)}.field-label{font-weight:600;display:block;margin-bottom:9px}.font-choice{width:100%;border:1px solid #c7c7c4;border-radius:var(--radius);background:white;padding:9px 10px;margin-bottom:19px}.entry{width:100%;height:114px;min-height:70px;resize:vertical;border:1px solid #c7c7c4;border-radius:var(--radius);padding:11px 12px;font-size:16px;line-height:1.45;background:white}.presets{display:flex;gap:5px;margin:12px 0 22px}.presets button{flex:1;border-color:transparent;padding:7px 4px;background:transparent}.presets button[aria-pressed=true]{background:#fce7dc;color:#ca4816}.controls{border-top:1px solid var(--line);padding-top:20px}.control{margin-bottom:19px}.control-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.control-head label{font-weight:500}.number-wrap{display:flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}.number-wrap input{width:62px;padding:2px 4px;text-align:right;border:1px solid transparent;background:transparent;border-radius:3px;font-variant-numeric:tabular-nums}.number-wrap input:hover,.number-wrap input:focus{border-color:#c7c7c4;background:#fff}.number-wrap span{font-size:12px;color:var(--muted);min-width:20px}.range{display:block;width:100%;height:4px;margin:0;accent-color:var(--accent);cursor:pointer}.alignment{border-top:1px solid var(--line);padding-top:18px;margin-top:24px}.alignment .buttons{display:flex;gap:6px}.alignment button{flex:1;font-size:13px;padding:7px 5px}.alignment button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:white}.features{display:flex;flex-wrap:wrap;gap:8px 15px;margin-top:20px;color:#555;font-size:12px}.features label{display:flex;align-items:center;gap:4px}.features input{accent-color:var(--accent)}.privacy{font-size:12px;color:var(--muted);margin:20px 0 0}.main{padding:25px 34px 40px;min-width:0;display:flex;flex-direction:column}.preview-top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-bottom:17px;border-bottom:1px solid var(--line)}.preview-top h2{font-size:16px;margin:0;font-weight:600}.preview-top span{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.canvas{padding-top:30px;min-height:570px;flex:1;overflow:auto}.typeset{font-family:sans-serif;font-weight:400;font-synthesis:none;font-kerning:normal;overflow-wrap:anywhere;max-width:100%;padding:0 2px;box-sizing:border-box}.typeset p{margin:0;white-space:pre-wrap;min-height:1em}.typeset p+p{margin-top:var(--paragraph)}.empty{font:16px/1.7 -apple-system,BlinkMacSystemFont,sans-serif;color:#aaa}.status{font-size:12px;color:var(--muted);margin-top:26px;max-width:760px}.status.error{color:#ad3116}#font-file{display:none}
+@media(max-width:850px){.header{padding:16px 20px;height:auto;min-height:80px;align-items:flex-start;flex-wrap:wrap}.brand span{display:none}.actions{gap:7px}.actions button,.actions a{padding:7px 12px;font-size:13px}.layout{grid-template-columns:260px minmax(0,1fr)}.sidebar{padding:20px}.main{padding:22px}.canvas{min-height:480px}}
+@media(max-width:620px){.header{gap:12px}.brand h1{font-size:21px}.layout{display:flex;flex-direction:column}.sidebar{border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:0 20px}.input-section,.controls,.alignment,.features,.privacy{grid-column:1/-1}.input-section{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.input-section .font-label,.font-choice{grid-column:1/-1}.entry,.presets{grid-column:1/-1}.controls{display:grid;grid-template-columns:1fr 1fr;column-gap:24px}.control:last-child{grid-column:1/-1}.alignment{margin-top:4px}.privacy{margin-top:12px}.main{padding:22px 20px}.canvas{min-height:360px;padding-top:22px}.status{line-height:1.7}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+<link rel="stylesheet" href="./grid.css">
+</head>
+<body>
+<header class="header"><div class="brand"><h1>字体试排</h1><span>输入文字，试出合适的排版。</span></div><div class="actions"><button id="import-button" type="button">载入字体</button><button id="reset" type="button">重置</button><a id="download" class="button primary" hidden>下载字体</a></div></header>
+<input id="font-file" type="file" accept=".ttf,.otf,.woff,.woff2" aria-label="载入本地字体">
+<div class="layout">
+<aside class="sidebar" aria-label="排版设置">
+<div class="input-section"><label class="field-label font-label" for="font-select">当前字体</label><select id="font-select" class="font-choice"></select><label class="field-label" for="text-input">输入文字</label><textarea id="text-input" class="entry" spellcheck="false" aria-describedby="paragraph-help">HAMBURGEFONTS
+Shape & rhythm
+0123456789</textarea><div class="presets" aria-label="示例文字"><button type="button" data-preset="title" aria-pressed="true">标题</button><button type="button" data-preset="paragraph" aria-pressed="false">段落</button><button type="button" data-preset="characters" aria-pressed="false">字符样本</button></div></div>
+<p class="grid-hint" id="grid-hint" hidden>字号控制校样放大。行距、字间距与段落设置在「自由试排」中调整。</p>
+<div class="controls" id="controls"></div>
+<div class="alignment"><span class="field-label">对齐方式</span><div class="buttons" role="group" aria-label="对齐方式"><button type="button" data-align="left" aria-pressed="true">左对齐</button><button type="button" data-align="center" aria-pressed="false">居中</button><button type="button" data-align="right" aria-pressed="false">右对齐</button></div></div>
+<div class="features"><label><input type="checkbox" id="kerning" checked>字偶调整</label><label><input type="checkbox" id="ligatures" checked>标准连字</label></div>
+<p class="privacy" id="paragraph-help">换行分行，空行分段。字体与文字仅在本机处理。</p>
+</aside>
+<main class="main"><div class="preview-top"><div class="preview-heading"><h2>实时预览</h2><div class="view-buttons" role="group" aria-label="预览模式"><button type="button" data-view="typeset" aria-pressed="true">自由试排</button><button type="button" data-view="grid" aria-pressed="false">网格校样</button></div></div><span id="font-name">等待载入字体</span></div>
+<section class="grid-settings" id="grid-settings" aria-label="网格设置" hidden>
+<div class="grid-fields" id="grid-fields"></div>
+<div class="grid-options"><label><input type="checkbox" id="grid-visible" checked>显示网格</label><label><input type="checkbox" id="guides-visible" checked>参考线</label><label><input type="checkbox" id="bounds-visible" checked>字框与边距</label></div>
+<div class="grid-legend"><span class="baseline-key">基线</span><span>字高参考线</span><span class="bounds-key">字面框 / 占位边界</span></div>
+<p class="grid-note" id="grid-source"></p>
+<p class="grid-note">网格以字原点对齐，每 4 格一条主线。所有字保持同一比例，字宽与边距为浏览器实测值。按输入顺序去重、跳过空白，单字不应用字偶或连字。</p>
+</section>
+<div class="canvas" id="canvas"><div class="typeset" id="preview" aria-label="文字排版预览"></div><div class="glyph-board" id="glyph-board" aria-label="逐字网格校样" hidden></div></div><p id="status" class="status" role="status">正在载入字体…</p></main>
+</div>
+<script src="./font-config.js"></script>
+<script>
+'use strict';
+const config = window.FONT_PROOF_CONFIG;
+const $=s=>document.querySelector(s);
+const mobile=window.innerWidth<621;
+const defaults={size:mobile?72:190,line:1.05,tracking:0,paragraph:.35,width:mobile?330:760};
+const state={...defaults,align:'left'};
+const controlSpecs=[['size','字号',12,320,1,'px'],['line','行距',.75,2.5,.05,'倍'],['tracking','字间距',-.08,.3,.005,'em'],['paragraph','段落间距',0,2.5,.05,'em'],['width','文本宽度',220,1600,1,'px']];
+const fonts=new Map([['sans-serif',{label:'系统示例 · 请载入待审字体',loaded:true,note:'当前显示系统无衬线示例。请载入待审字体，或用生成脚本绑定字体文件。'}]]);
+if(config)fonts.set('ProofFont',{...config,label:config.family+' / '+config.style+' · '+config.version,url:'./'+config.file+'?v='+config.sha256.slice(0,12),coverage:new Set(config.codepoints),loaded:false,note:'当前项目字体。未覆盖的文字可能使用系统回退；字偶与连字开关仅调用字体已有特性。'});
+for(const [family,font]of fonts)$('#font-select').add(new Option(font.label,family));
+$('#font-select').value=config?'ProofFont':'sans-serif';
+const presets={title:'HAMBURGEFONTS\nShape & rhythm\n0123456789',paragraph:'Good type gives words a voice.\nA strong headline sets the tone.\n\nShape, rhythm and space work together. Every letter carries weight; every pause creates room to read.\n\nMake room for bold ideas.',characters:'ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789\n\n!? . , : ; “ ” ‘ ’ ( ) [ ] { }\n@ # & % + − × ÷ = / \\ _\n$ € £ ¥ © ® ™ ° … —\n\nÀ Á Â Ã Ä Å Æ Ç È É Ê Ë\nÌ Í Î Ï Ð Ñ Ò Ó Ô Õ Ö Ø\nÙ Ú Û Ü Ý Þ ß æ œ'};
+let importSequence=0;
+for(const [key,label,min,max,step,unit] of controlSpecs){
+  const control=document.createElement('div');control.className='control';
+  control.innerHTML=`<div class="control-head"><label for="${key}-range">${label}</label><div class="number-wrap"><input id="${key}-number" type="number" min="${min}" max="${max}" step="${step}" aria-label="${label}数值"><span>${unit}</span></div></div><input class="range" id="${key}-range" type="range" min="${min}" max="${max}" step="${step}" aria-label="${label}">`;
+  $('#controls').append(control);
+  for(const suffix of ['range','number']){
+    const input=$(`#${key}-${suffix}`);input.value=state[key];
+    input.addEventListener('input',()=>{if(input.value==='')return;const v=Number(input.value);if(!Number.isFinite(v))return;state[key]=Math.min(Number(input.max),Math.max(min,v));syncControl(key,input);applyStyle();});
+    input.addEventListener('change',()=>syncControl(key));
+  }
+}
+function syncControl(key,source){for(const suffix of ['range','number']){const el=$(`#${key}-${suffix}`);if(el!==source)el.value=Number(state[key].toFixed(3));}}
+function applyStyle(){const p=$('#preview');p.style.fontSize=state.size+'px';p.style.lineHeight=state.line;p.style.letterSpacing=state.tracking+'em';p.style.setProperty('--paragraph',state.paragraph+'em');p.style.width=state.width+'px';p.style.textAlign=state.align;p.style.fontKerning=$('#kerning').checked?'normal':'none';p.style.fontVariantLigatures=$('#ligatures').checked?'normal':'none';window.fontGrid?.requestRender();}
+function updateText(){
+  const text=$('#text-input').value.replace(/\r\n?/g,'\n');const preview=$('#preview');preview.replaceChildren();window.fontGrid?.requestRender();
+  if(!text){const span=document.createElement('span');span.className='empty';span.textContent='在左侧输入文字，实时查看排版。';preview.append(span);return;}
+  for(const paragraph of text.split(/\n[\t ]*\n/)){const p=document.createElement('p');p.textContent=paragraph||'\u200b';preview.append(p);}
+}
+function status(text,error=false){$('#status').textContent=text;$('#status').classList.toggle('error',error);}
+function selectFont(){const key=$('#font-select').value;const f=fonts.get(key);$('#preview').style.fontFamily=`"${key}", sans-serif`;$('#preview').style.visibility=f.loaded?'visible':'hidden';$('#font-name').textContent=f.label;$('#download').hidden=!f.url||!f.loaded;if(f.url){$('#download').href=f.url;$('#download').download=f.filename;}status(f.loaded?f.note:'正在载入项目字体…');window.fontGrid?.setFont();}
+$('#text-input').addEventListener('input',()=>{updateText();document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed','false'));});
+document.querySelectorAll('[data-preset]').forEach(button=>button.addEventListener('click',()=>{const key=button.dataset.preset;$('#text-input').value=presets[key];if(!document.body.classList.contains('grid-mode'))state.size=key==='title'?defaults.size:key==='paragraph'?(mobile?36:56):(mobile?28:64);syncControl('size');document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));applyStyle();updateText();}));
+document.querySelectorAll('[data-align]').forEach(button=>button.addEventListener('click',()=>{state.align=button.dataset.align;document.querySelectorAll('[data-align]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));applyStyle();}));
+for(const id of ['kerning','ligatures'])$('#'+id).addEventListener('change',applyStyle);
+$('#reset').addEventListener('click',()=>{Object.assign(state,defaults,{align:'left',width:Math.min(defaults.width,Number($('#width-range').max))});for(const [key]of controlSpecs)syncControl(key);$('#text-input').value=presets.title;$('#kerning').checked=true;$('#ligatures').checked=true;document.querySelectorAll('[data-align]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.align==='left')));document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset==='title')));window.fontGrid?.reset();applyStyle();updateText();});
+$('#font-select').addEventListener('change',selectFont);
+$('#import-button').addEventListener('click',()=>$('#font-file').click());
+$('#font-file').addEventListener('change',async event=>{
+  const file=event.target.files[0];event.target.value='';if(!file)return;const seq=++importSequence;
+  if(!/\.(ttf|otf|woff2?)$/i.test(file.name)){status('请选择 TTF、OTF、WOFF 或 WOFF2 字体文件。',true);return;}
+  status('正在载入 '+file.name+'…');
+  try{
+    const family='LocalFont'+seq;const face=new FontFace(family,await file.arrayBuffer());await face.load();if(seq!==importSequence)return;
+    document.fonts.add(face);const url=URL.createObjectURL(file);
+    fonts.set(family,{label:file.name,url,filename:file.name,loaded:true,note:'本地字体：'+file.name+'。缺字时浏览器会使用系统字体；仅支持字体内已有的字偶调整和连字。'});
+    $('#font-select').add(new Option(file.name,family));$('#font-select').value=family;selectFont();
+  }catch{if(seq===importSequence)status('无法载入这个字体文件，当前字体已保留。请检查文件是否完整。',true);}
+});
+new ResizeObserver(entries=>{const available=Math.max(220,Math.floor(entries[0].contentRect.width));for(const suffix of ['range','number'])$('#width-'+suffix).max=available;state.width=Math.min(state.width,available);syncControl('width');applyStyle();}).observe($('#canvas'));
+window.addEventListener('pagehide',()=>{for(const f of fonts.values())if(f.url.startsWith('blob:'))URL.revokeObjectURL(f.url);});
+applyStyle();updateText();
+selectFont();
+if(config){
+  const font=fonts.get('ProofFont');const face=new FontFace('ProofFont',`url("${font.url}")`);document.fonts.add(face);
+  face.load().then(()=>{font.loaded=true;if($('#font-select').value==='ProofFont')selectFont();}).catch(()=>{
+    document.fonts.delete(face);if($('#font-select').value==='ProofFont'){$('#font-select').value='sans-serif';selectFont();status('项目字体加载失败。请保留 fonts 文件夹，或用“载入字体”选择文件。',true);}
+  });
+}
+</script>
+<script src="./grid.js"></script>
+</body>
+</html>

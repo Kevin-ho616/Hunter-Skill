@@ -4,6 +4,7 @@
 
 ## 已收录
 
+- [猎人字体设计 · Hunter Front Design](skills/hunter-front-design/README.md)：从设计原则、网格控制字与全字符审校，到字体封装、离线试排和按需制作的宣传海报。
 - [喵掌勺 · miao-zhang-shao](skills/miao-zhang-shao/SKILL.md)：黑白英短猫美食喜剧，从菜品策划、LibTV 视频制作到品牌封面。
 - [产品手册分层排版 · product-manual-layout](skills/product-manual-layout/SKILL.md)：产品手册、操作手册、宣传册和产品目录的分层排版，支持按需交付 INDD／IDML、AI 与 PDF。
 - [品牌 VI 手册 · brand-vi-manual](skills/brand-vi-manual/SKILL.md)：将定稿 Logo 与品牌简报扩展为 16:9 PPTX 商业 VI 手册，涵盖基础规范、应用设计与场景 Mockup。
@@ -25,3 +26,7 @@
 ### 品牌 VI 手册
 
 需要已定稿 Logo、品牌简报及可用的 Presentations Skill；需要生成场景或 Mockup 时，还需 imagegen Skill 和图像工具。默认交付本地 16:9 PPTX，具体要求见 Skill 原文。
+
+### 猎人字体设计
+
+完整复制 `skills/hunter-front-design/` 后调用 `$hunter-front-design`。已验证流程以拉丁字体为主；离线试排页面可直接打开，生成带字体的校样包需要 Python 和 fontTools。依赖、使用示例与 MIT 许可范围见该目录的 [README](skills/hunter-front-design/README.md)。

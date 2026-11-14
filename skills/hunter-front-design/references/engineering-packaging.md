@@ -1,0 +1,101 @@
+# 字体工程、常见格式与封装交付
+
+在样字验证后扩展工程、导出或交付时读。实际能力以所用编辑器、编译器和目标平台为准；一个能运行的生成脚本不是完整字体的验收证明。
+
+## 可重复的源与构建
+
+- 保存可编辑轮廓和工程数据：UFO/Glyphs 等源，或能重建原创轮廓的源码；包括 Unicode、字形顺序、宽度、部件、锚点、特性和命名信息。
+- 复用项目已有字体编辑器/构建系统。需要代码绘制时可用 fontTools 的 pens、FontBuilder、feaLib；只在需要布尔轮廓时使用已有 pathops。不要把另一套字体的造型脚本当通用自动设计器。
+- 选择轮廓路径后真实编译。三次/二次贝塞尔转换要控制误差；例如三次源到 TrueType `glyf` 可用 `Cu2QuPen`，到 CFF 使用相应 CharString 编译。根据当前版本本地 API/官方文档核对调用。
+- 保留源中有用的部件/编辑结构；导出按格式要求处理方向、重叠、闭合与极值。多母版不要为清重叠破坏插值兼容。
+
+## 字符与 OpenType
+
+按约定字符清单检查 cmap、字形名、`.notdef`、空格/不换行空格、控制字符的预期行为。区分码点数、字形数及通过 GSUB 到达的未编码字形。
+
+先调边距，再调字偶类别和例外。用真实塑形引擎检查 `kern`；需要 `liga/clig/calt/ccmp/mark/mkmk/locl`、数字样式、分数或替代字形时才设计并实现。开关必须实际改变对应场景；预组合重音字符齐全不代表组合附标支持已完成。检查 NFC/NFD、标点、重音邻字碰撞和数字串。
+
+检查 name 的 family/subfamily、完整名、PostScript 名、版本/唯一标识，以及多样式需要的 typographic family/subfamily；检查 OS/2 的字重/字宽、样式标记、Unicode/代码页、垂直度量和嵌入字段。名称需要在目标软件里验证，不能只看文件名。[OpenType name](https://learn.microsoft.com/en-us/typography/opentype/spec/name)、[OS/2](https://learn.microsoft.com/en-us/typography/opentype/spec/os2)
+
+## 格式选择：轮廓、容器和交付压缩包是三件事
+
+| 文件/形态 | 用途与封装要求 | 必查项 |
+| --- | --- | --- |
+| TTF | 常用安装格式；通常采用 TrueType `glyf` 二次曲线 | sfnt、glyf/loca/hmtx、cmap、name、真实渲染 |
+| OTF | 常用 OpenType 安装格式；本工作流交付 CFF 时明确注明 | 实际轮廓表、命名、布局；与 TTF 的转换差异 |
+| WOFF2 | 网页字体压缩容器，按网页交付需要制作 | 解包回读、覆盖/布局保留、真实浏览器加载 |
+| WOFF | 网页需要该格式时提供 | 与选定桌面母文件的一致性、浏览器加载 |
+| TTC/OTC | 需要多个字体的合集时使用 | 每个 face 的索引、名称、覆盖与目标软件支持；不是 ZIP 改名 |
+| 可变 TTF/OTF/WOFF2 | 多母版/轴需求明确时制作 | 兼容轮廓、轴/实例命名、极值/中间态、间距与目标应用；不是新扩展名 |
+| UFO/Glyphs/设计源码 | 可编辑源与重建依据 | 与发布版对应；不是供普通用户安装的字体 |
+| ZIP | 对以上交付物打包运输 | 路径、文件清单、校验值、解压回读；本身不是字体格式 |
+
+OpenType 的文件扩展名并不独立证明轮廓类型；核对实际表与签名。TTF 和 OTF 都可以是 OpenType 字体，不把 OTF 简称为“更高级”或默认更好。[OpenType 文件规范](https://learn.microsoft.com/en-us/typography/opentype/spec/otff)
+
+常规完整桌面交付考虑 TTF 与 OTF；若项目只要求一种就只出需要的格式，并注明。网页交付提供 WOFF2，WOFF 按兼容要求补充。每种声称交付的格式都要实际生成；不能只修改后缀。EOT、SVG Font、Type 1 等旧式格式只在明确的旧系统需求下另行评估，不默认生成。
+
+### 网页封装示例
+
+从已经审校的一个桌面母文件生成 WOFF/WOFF2；不要分别从不同修订版导出。下面仅改变容器，不把 `glyf` 变成 CFF，不负责设计、许可或安装验证：
+
+```python
+from pathlib import Path
+from fontTools.ttLib import TTFont
+
+source = Path("/project/release/desktop/ttf/Family-Heavy.ttf")
+web = Path("/project/release/web")
+web.mkdir(parents=True, exist_ok=True)
+for flavor in ("woff2", "woff"):
+    target = web / f"{source.stem}.{flavor}"
+    if target.exists():
+        raise FileExistsError(target)
+    with TTFont(source, recalcTimestamp=False) as font:
+        font.flavor = flavor
+        font.save(target)
+    with TTFont(target) as packed, TTFont(source) as original:
+        assert packed.flavor == flavor
+        assert packed.getBestCmap() == original.getBestCmap()
+        assert packed.getGlyphOrder() == original.getGlyphOrder()
+        assert packed["hmtx"].metrics == original["hmtx"].metrics
+```
+
+还须比对轮廓和实际塑形，以上断言不是完整等价证明。WOFF2 需要当前环境的 Brotli 支持；缺少时说明并使用项目隔离环境，不伪造输出。[fontTools ttLib](https://fonttools.readthedocs.io/en/latest/ttLib/index.html)、[WOFF2](https://fonttools.readthedocs.io/en/latest/ttLib/woff2.html)
+
+网页 CSS 的 family、weight、style 要匹配字体实际元数据；避免浏览器合成粗体/斜体。预览文件使用内容哈希更新 URL，修改后核对实际加载字节。WOFF/WOFF2 为网页包装，不把它们当通用系统安装包。
+
+## 最小完整的发行目录
+
+按本次范围裁剪；没有制作的格式或文件不要留空目录，也不伪造授权文件。
+
+```text
+Family-v001/
+  desktop/ttf/       # 已验证的安装字体
+  desktop/otf/       # 若交付该格式
+  web/               # WOFF2/WOFF 与实际匹配的 @font-face 示例
+  source/            # 可编辑源、features、构建说明与依赖版本
+  proof/             # 网格/无网格样张和离线试排工具
+  checks/            # 覆盖清单、版本差异、结构/塑形/平台检查
+  使用说明.md         # 安装、版本、家族、适用范围、更新/卸载提示
+  字符清单.csv        # 码点、字形、语言范围、已实现特性
+  授权状态.md         # 只写已确认的许可与来源；未定稿说明未定
+  manifest.json      # 相对路径、格式/轮廓类型、版本、大小、SHA-256
+```
+
+许可已正式确定时使用真实许可文本；没有决定时不能替用户选开源许可、承诺商用权或独占权。嵌入字段要与已确认许可一致，不为了消除警告擅改授权。
+
+封装前核对：
+
+1. 目录和内部 name/版本一致；相同家族同一样式的 TTF/OTF 是安装替代项，说明任选一种，避免重名冲突。
+2. 所有字体能重新打开，格式标识与实际容器/轮廓一致；网页文件与指定桌面母文件的覆盖、轮廓/度量及塑形相符。
+3. 记录每个交付文件相对路径、大小和 SHA-256。压缩包中的 manifest 不给自己写循环哈希；ZIP 本身的哈希另存包外。
+4. ZIP 从干净发行目录创建，不夹带 `.venv`、缓存、历史备份、系统字体、私人参考或凭据。依赖版本与源文件另做清晰说明。
+5. 解压到临时目录，核对清单/哈希，重新加载至少一个桌面字体和每种网页容器，打开随包试排页。成功后才称“封装检查通过”。
+
+## 工程与平台验收
+
+- 轮廓：闭合、方向、重复点、自交/无意义重叠、极值、切向、碎片；源与各导出分别看。
+- 度量：所有字符含重音/下伸部不被默认行盒裁切；不同样式混排行距稳定；占位/边距与设计规则一致。
+- 工程检查：可用 FontBakery/OTS 等工具；记录实际版本、profile、PASS/WARN/FAIL/SKIP，并逐项解释警告。工具没运行或跳过的检查不能写“通过”。
+- 光学检查：全字形、目标尺寸、反白、单词/段落；TTF/OTF 曲线转换差异、屏幕小字 hinting 按用途评估。结构全绿不证明外观统一。
+- 平台：先临时/进程注册检验解析，再按授权做实际安装、应用识别、更新/卸载、PDF 嵌入或印刷。系统安装会改变用户环境，完成范围以本次授权为准；不会自动删除旧字体。
+- 不用 macOS 上的注册结果替 Windows/Adobe/Office 验证，不用浏览器加载替系统安装。未测平台与已知问题随交付说明。
