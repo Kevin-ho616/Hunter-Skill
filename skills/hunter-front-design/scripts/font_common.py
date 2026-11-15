@@ -38,6 +38,14 @@ def load_targets(path):
         codes.update(range(lo, hi+1))
     if not codes or any(0xd800 <= cp <= 0xdfff for cp in codes):
         raise ValueError('Declare a nonempty Unicode character scope.')
+    if 'punctuation_height' in data:
+        rule = data['punctuation_height']
+        limit = rule.get('max_above_cap') if isinstance(rule,dict) else None
+        if isinstance(limit,bool) or not isinstance(limit,(int,float)) or not math.isfinite(limit) or limit < 0:
+            raise ValueError('punctuation_height.max_above_cap must be finite and nonnegative, in em-normalised 1000 units.')
+        extra = rule.get('extra_characters','')
+        if not isinstance(extra,str) or not set(map(ord,extra)) <= codes:
+            raise ValueError('punctuation_height.extra_characters must be a string within declared coverage.')
     for key, spec in data.get('metrics', {}).items():
         if key not in ('cap','xh','asc','desc','n_stem','o_side','o_thin','contrast'):
             raise ValueError(f'Unknown measurement target: {key}')

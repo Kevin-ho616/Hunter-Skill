@@ -19,11 +19,12 @@ from check_font import check_font, check_container, pair_gap
 from create_font_book import create_book
 
 
-def fixture(path, cff=False):
-    names = ['.notdef']+[f'c{cp:04X}' for cp in range(32,127)]
+def fixture(path, cff=False, punctuation_top=None, extra_codes=()):
+    codes = [*range(32,127),*extra_codes]
+    names = ['.notdef']+[f'c{cp:04X}' for cp in codes]
     builder = FontBuilder(1000,isTTF=not cff)
     builder.setupGlyphOrder(names)
-    builder.setupCharacterMap({cp:f'c{cp:04X}' for cp in range(32,127)})
+    builder.setupCharacterMap({cp:f'c{cp:04X}' for cp in codes})
     glyphs = {}
     for name in names:
         pen = T2CharStringPen(600,None) if cff else TTGlyphPen(None)
@@ -41,12 +42,16 @@ def fixture(path, cff=False):
             rect(120,80,460,420,True)
         elif cp != 32:
             height = 700 if chr(cp).isupper() or chr(cp) in 'bdhkl' else 500
+            if cp == 40 and punctuation_top is not None:
+                height = punctuation_top
+            if cp > 127:
+                height = 900
             if cp in (110,72):
                 rect(40,0,120,height)
                 rect(480,0,560,height)
                 rect(120,300 if cp == 72 else 420,480,380 if cp == 72 else 500)
             else:
-                rect(40,-150 if chr(cp) in 'pq' else 0,540,height)
+                rect(40,-150 if chr(cp) in 'pq,' else 0,540,height)
         glyphs[name] = pen.getCharString() if cff else pen.glyph()
     if cff:
         builder.setupCFF('Fixture-Regular',{'FullName':'Fixture Regular','FamilyName':'Fixture','Weight':'Regular'},glyphs,{})
@@ -56,7 +61,7 @@ def fixture(path, cff=False):
     builder.setupHorizontalHeader(ascent=800,descent=-200)
     builder.setupNameTable({'familyName':'Fixture','styleName':'Regular','uniqueFontIdentifier':'Fixture 1.000',
                             'fullName':'Fixture Regular','psName':'Fixture-Regular','version':'Version 1.000'})
-    builder.setupOS2(sTypoAscender=800,sTypoDescender=-200,usWinAscent=800,usWinDescent=200,sxHeight=500,sCapHeight=700)
+    builder.setupOS2(sTypoAscender=800,sTypoDescender=-200,usWinAscent=1000 if extra_codes else 800,usWinDescent=200,sxHeight=500,sCapHeight=700)
     builder.setupPost()
     addOpenTypeFeaturesFromString(builder.font,'feature kern { pos c0041 c0056 -40; } kern;')
     builder.save(path)
@@ -117,10 +122,41 @@ class FontToolsTest(unittest.TestCase):
         for i,change in enumerate(({'coverage':{'ranges':['U+D800-DFFF']}},
                                    {'metrics':{'xh':{'value':500,'tolerance':-1}}},
                                    {'metrics':{'nonsense':{'value':1,'tolerance':0}}},
+                                   {'punctuation_height':{'max_above_cap':True}},
+                                   {'punctuation_height':{'max_above_cap':-1}},
+                                   {'punctuation_height':{'max_above_cap':float('nan')}},
+                                   {'punctuation_height':{'max_above_cap':0,'extra_characters':['1']}},
+                                   {'punctuation_height':{'max_above_cap':0,'extra_characters':'¹'}},
                                    {'shaping':{'features':[{'tag':"bad'",'text':'AV'}]}},
                                    {'shaping':{'pairs':['AVX']}})):
             with self.assertRaises(ValueError):
                 load_targets(self.write(f'bad{i}.json',{**self.targets,**change}))
+
+    def test_punctuation_upper_bounds_real_outlines_and_exceptions(self):
+        codes = [*range(32,127),0x00C1,0x0301,0x00B9]
+        targets = {**self.targets,'punctuation_height':{'max_above_cap':0}}
+        for cff,suffix in ((False,'ttf'),(True,'otf')):
+            for top,state in ((700,'PASS'),(720,'FAIL')):
+                path = self.root/f'punct-{top}.{suffix}'
+                fixture(path,cff,punctuation_top=top,extra_codes=codes[95:])
+                before = path.read_bytes()
+                result = check_font(path,targets,codes)
+                row = next(r for r in result['checks'] if r['gate']=='punctuation upper bounds')
+                self.assertEqual(row['state'],state)
+                self.assertEqual(row['detail']['cap_height'],700)
+                self.assertEqual([r['character'] for r in row['detail']['violations']],['('] if top > 700 else [])
+                self.assertTrue(any(r['character']==',' and r['y_min']<0 for r in row['detail']['measurements']))
+                extended = {**targets,'punctuation_height':{'max_above_cap':0,'extra_characters':'¹'}}
+                extra = next(r for r in check_font(path,extended,codes)['checks'] if r['gate']=='punctuation upper bounds')
+                self.assertIn('¹',[r['character'] for r in extra['detail']['violations']])
+                self.assertNotIn('punctuation upper bounds',[r['gate'] for r in check_font(path,self.targets,codes)['checks']])
+                self.assertEqual(path.read_bytes(),before)
+        font = TTFont(self.ttf)
+        for table in font['cmap'].tables:
+            table.cmap.pop(72,None)
+        noH = self.root/'punct-no-H.ttf';font.save(noH)
+        row = next(r for r in check_font(noH,targets,[40])['checks'] if r['gate']=='punctuation upper bounds')
+        self.assertEqual(row['state'],'SKIP')
 
     def test_isolated_jpeg_fringe_does_not_become_a_stroke(self):
         from PIL import Image,ImageDraw

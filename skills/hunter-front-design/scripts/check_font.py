@@ -70,6 +70,26 @@ def check_font(path, targets, codes):
         os2 = font['OS/2']
         fits = os2.usWinAscent >= math.ceil(ymax) and os2.usWinDescent >= math.ceil(-ymin)
         add('vertical ink bounds','PASS' if fits else 'FAIL',{'win':[os2.usWinAscent,os2.usWinDescent],'ink':[ymax,ymin]})
+        if 'punctuation_height' in targets:
+            rule = targets['punctuation_height']
+            cap = face.bounds(face.cmap[ord('H')]) if ord('H') in face.cmap else None
+            extra = set(map(ord,rule.get('extra_characters','')))
+            selected = [cp for cp in codes if cp in face.cmap and
+                        (unicodedata.category(chr(cp))[0] in 'PS' or cp in extra)]
+            measurements = []
+            for cp in selected:
+                box = face.bounds(face.cmap[cp])
+                if box:
+                    measurements.append({'codepoint':f'U+{cp:04X}','character':chr(cp),
+                                         'glyph':face.cmap[cp],'y_min':box[1],'y_max':box[3]})
+            if cap is None or not measurements:
+                add('punctuation upper bounds','SKIP','Actual H outline and at least one visible declared punctuation/symbol are required.')
+            else:
+                ceiling = cap[3] + rule['max_above_cap']*face.upm/1000
+                violations = [row for row in measurements if row['y_max'] > ceiling+1e-6]
+                add('punctuation upper bounds','FAIL' if violations else 'PASS',
+                    {'cap_source':'H outline bounds','cap_height':cap[3],'ceiling':ceiling,'units':'font units',
+                     'checked':len(measurements),'violations':violations,'measurements':measurements})
         ps = face.info['postscriptName'] or ''
         valid_name = bool(ps) and len(ps) <= 63 and not re.search(r'[\s\[\](){}<>/%]',ps) and all(33 <= ord(c) <= 126 for c in ps)
         add('PostScript name','PASS' if valid_name else 'FAIL',ps)
