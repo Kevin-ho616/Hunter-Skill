@@ -4,6 +4,16 @@
 
 **核心顺序：确认需求与风格 → A/B/C 三张概念参考图 → 用户选定 → 设计原则 → 同尺度网格样字 → 分组扩展字符 → 整套光学审校 → 工程验收、试排与技术字样册 → 字体封装 → 按需制作展示海报。**
 
+## 一键安装
+
+需先安装 Node.js 22.20 或以上版本（包含 `npx`），在终端执行：
+
+```bash
+npx -y skills@latest add Kevin-ho616/Hunter-Skill --skill hunter-front-design -g -y
+```
+
+该命令全局安装本 Skill，并跳过交互确认。安装后，在助手中调用 `$hunter-front-design`；字体制作所需的其他工具与依赖按下文准备。安装环境与参数见 [Skills CLI 官方说明](https://github.com/vercel-labs/skills#install-a-skill)。
+
 ## 内容
 
 - [SKILL.md](SKILL.md)：执行流程与验收要求。
@@ -20,7 +30,7 @@ Skill 是提供给 AI 编程助手的工作方法和工具，不是一个按下�
 
 ## 在 Codex 中使用
 
-下载本仓库，将整个 `hunter-front-design` 文件夹放入 Codex 当前配置的 Skill 加载目录，保留 `assets`、`scripts`、`references`、`agents`。在助手可识别 Skill 后调用：
+可使用上方命令安装；也可手动下载本仓库，将整个 `hunter-front-design` 文件夹放入 Codex 当前配置的 Skill 加载目录，保留 `assets`、`scripts`、`references`、`agents`。在助手可识别 Skill 后调用：
 
 ```text
 使用 $hunter-front-design，帮我设计一套用于海报标题的英文字体。

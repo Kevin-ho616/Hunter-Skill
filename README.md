@@ -2,6 +2,16 @@
 
 尽情创造。
 
+## 一键安装猎人字体设计
+
+需先安装 Node.js 22.20 或以上版本（包含 `npx`），在终端执行：
+
+```bash
+npx -y skills@latest add Kevin-ho616/Hunter-Skill --skill hunter-front-design -g -y
+```
+
+该命令全局安装猎人字体设计 Skill，并跳过交互确认。安装后，在助手中调用 `$hunter-front-design`。使用示例与依赖见 [字体 Skill README](skills/hunter-front-design/README.md)，安装环境与参数见 [Skills CLI 官方说明](https://github.com/vercel-labs/skills#install-a-skill)。
+
 ## 已收录
 
 - [猎人字体设计 · Hunter Front Design](skills/hunter-front-design/README.md)：确认需求与风格后，先出 A/B/C 参考图选样，再做设计规则、网格控制字、全字符光学审校、工程验收、字体封装、离线试排与技术字样册；宣传海报按需制作。
