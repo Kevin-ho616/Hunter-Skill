@@ -101,6 +101,34 @@ class FontToolsTest(unittest.TestCase):
             self.assertEqual(self.failed(path),[])
             self.assertEqual(path.read_bytes(),before)
 
+    def test_localized_names_require_exact_language_and_preserve_english(self):
+        otf = self.root/'fixture.otf'
+        fixture(otf,True)
+        names = {1:'示例字体',2:'常规',4:'示例字体 常规',16:'示例字体',17:'常规'}
+        records = [{'name_id':k,'platform_id':3,'encoding_id':1,'language_id':2052,'value':v}
+                   for k,v in names.items()]
+        records += [{'name_id':1,'platform_id':3,'encoding_id':1,'language_id':1033,'value':'Fixture'},
+                    {'name_id':6,'platform_id':3,'encoding_id':1,'language_id':1033,'value':'Fixture-Regular'}]
+        targets = {**self.targets,'expect':{'name_records':records}}
+        for source in (self.ttf,otf):
+            before = source.read_bytes()
+            self.assertIn('name record 16/3/1/2052',self.failed(source,targets))
+            localized = self.root/('localized'+source.suffix)
+            with TTFont(source,recalcTimestamp=False) as font:
+                for key,value in names.items():
+                    font['name'].setName(value,key,3,1,2052)
+                font.save(localized)
+            exported = localized.read_bytes()
+            self.assertEqual(self.failed(localized,targets),[])
+            wrong = {**targets,'expect':{'name_records':[
+                {**records[0],'language_id':1033}, {**records[3],'value':'错误名称'}]}}
+            self.assertIn('name record 1/3/1/1033',self.failed(localized,wrong))
+            self.assertIn('name record 16/3/1/2052',self.failed(localized,wrong))
+            invalid = {**targets,'expect':{'name_records':[{**records[0],'language_id':'0x0804'}]}}
+            self.assertIn('read/validate',self.failed(localized,invalid))
+            self.assertEqual(localized.read_bytes(),exported)
+            self.assertEqual(source.read_bytes(),before)
+
     def test_pixel_calibration_and_missing_anchors(self):
         result = calibrate(self.ttf,240,self.root/'calibration.json')
         self.assertLess(abs(result['errors']['n_stem']),5)

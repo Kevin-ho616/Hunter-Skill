@@ -25,6 +25,8 @@ PASS 只适用于已运行且声明在该报告范围内的关卡；INFO 是测�
 
 检查 name 的 family/subfamily、完整名、PostScript 名、版本/唯一标识，以及多样式需要的 typographic family/subfamily；检查 OS/2 的字重/字宽、样式标记、Unicode/代码页、垂直度量和嵌入字段。名称需要在目标软件里验证，不能只看文件名。[OpenType name](https://learn.microsoft.com/en-us/typography/opentype/spec/name)、[OS/2](https://learn.microsoft.com/en-us/typography/opentype/spec/os2)
 
+需要中文名或双语名称时，按 [本地化命名流程](bilingual-naming.md) 保留确认依据、语言记录和兼容分组。在 `expect.name_records` 声明本次应存在的中英文记录，逐文件精确核验；局部补写中文时保护原英文、唯一标识、PostScript 与 CFF 内部名称。名称表变化会改变字体哈希，须同步当前副本与封装证据。
+
 ## 版权与许可：封装必做关卡
 
 按 [填写、写入与回读流程](copyright-and-license.md) 执行：先整理已确认的版权方、年份、设计者／制作方及许可，再在构建源写入 `name` 0／8／9／13／14；导出后逐字重、逐格式回读实际值与语言／平台变体。CFF 的 Notice／Copyright（如有）和随包许可／归属文件一并核对。

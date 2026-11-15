@@ -97,6 +97,15 @@ def check_font(path, targets, codes):
         for key in ('family','style'):
             if expected.get(key):
                 add('expected '+key,'PASS' if face.info[key] == expected[key] else 'FAIL',face.info[key])
+        for spec in expected.get('name_records',[]):
+            key = tuple(spec[k] for k in ('name_id','platform_id','encoding_id','language_id'))
+            value = spec['value']
+            if any(type(v) is not int or not 0 <= v <= 65535 for v in key) or not isinstance(value,str) or not value.strip():
+                raise ValueError('Expected name records require four integer IDs and confirmed nonempty text.')
+            record = font['name'].getName(*key)
+            actual = record.toUnicode() if record is not None else None
+            add('name record '+ '/'.join(map(str,key)),'PASS' if actual == value else 'FAIL',
+                {'expected':value,'actual':actual})
         metrics = font_measurements(face)
         for key,spec in targets.get('metrics',{}).items():
             if key not in metrics:
