@@ -21,6 +21,7 @@ npx -y skills@latest add Kevin-ho616/Hunter-Skill --skill hunter-front-design -g
 - [参考测量与项目参数](references/measurement-and-targets.md)：有参考时先校准测量，用 [参数示例](assets/font-targets.example.json) 记录项目自己的目标、容差、字符范围与塑形样例。
 - [审字经验](references/design-review.md)：共享部件、跨字符风格统一和常见修订误区。
 - [工程与封装](references/engineering-packaging.md)：命名、编码、字偶、真实 TTF/OTF、WOFF2/WOFF 与验证边界。
+- [版权与许可](references/copyright-and-license.md)：填写版权方与授权资料，在构建源写入，并逐字重、逐格式回读检查；开源底字保留原版权和许可，修改者署名另行追加。
 - [试排工具](references/proof-tool.md)：离线输入文字、调整排版、查看同尺度网格。
 - [通用验收与技术字样册](references/automated-checks-and-book.md)：检查真实字体，生成同版本的字符表、字号阶梯、字偶对照与 PDF。
 - [中文衍生字库](references/cjk-derived.md)：选择开源骨架定制路线时，核对来源许可、汉字结构、约定覆盖与中文试排。
