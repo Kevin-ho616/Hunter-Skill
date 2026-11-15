@@ -1,0 +1,10 @@
+.header .brand{align-items:center;gap:14px}
+.hunter-brand-logo{display:block;width:170px;height:auto;flex-shrink:0;object-fit:contain}
+.sidebar.with-attribution{display:flex;flex-direction:column;overflow:hidden;padding:0}
+.proof-controls{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:24px}
+.proof-attribution{flex:none;padding:20px 24px;border-top:1px solid var(--line);background:var(--panel);text-align:center}
+.proof-qr{display:block;width:150px;height:150px;margin:auto;background:#fff}
+.proof-credit{margin:12px 0 0;color:#c74e20;font-size:12px;line-height:1.5}
+@media(max-width:850px){.proof-controls{padding:20px}}
+@media(max-width:700px){.header{padding-left:12px;padding-right:12px;gap:8px}.header .brand{gap:0;min-width:0}.header .brand h1,.header .brand span{display:none}.hunter-brand-logo{width:90px}.header .actions{gap:6px}.header .actions button,.header .actions a{font-size:11px;padding:8px}}
+@media(max-width:620px){.sidebar.with-attribution{gap:0}.proof-controls{flex:none;overflow:visible}.proof-attribution{order:-1;border-top:0;border-bottom:1px solid var(--line)}}

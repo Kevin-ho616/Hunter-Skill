@@ -28,6 +28,15 @@ const {createHash}=require('node:crypto');
     await page.waitForFunction(()=>document.querySelector('#download').hidden===false);
     assert((await page.locator('#font-name').innerText()).includes(info.version));
     const settle=()=>page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    const qr=page.locator('.proof-qr');
+    await qr.evaluate(img=>img.decode());
+    const qrBox=await qr.boundingBox();
+    assert(qrBox.y>=0&&qrBox.y+qrBox.height<=1047,'QR must be visible on first open');
+    assert(Math.abs(qrBox.width-qrBox.height)<.1,'Keep the QR square and uncropped');
+    assert.equal(await page.locator('.proof-attribution').innerText(),'Created by AIGC创意猎人');
+    assert.equal(await page.locator('.proof-attribution > *').count(),2,'Only QR and one credit line');
+    assert.equal(await page.locator('#font-rights').count(),0);
+    await page.mouse.move(0,0);await page.screenshot({path:path.join(evidence,'attribution-desktop.png')});
     const enter=async(selector,value)=>{await page.locator(selector).fill(String(value));await page.locator(selector).blur();await settle();};
     const download=page.waitForEvent('download');await page.locator('#download').click();
     assert.equal(hash(fs.readFileSync(await (await download).path())),info.sha256);
@@ -106,8 +115,9 @@ const {createHash}=require('node:crypto');
     await page.setViewportSize({width:1280,height:600});
     await page.locator('[data-view="grid"]').click();await settle();
     assert(await page.locator('#canvas').evaluate(el=>el.clientHeight>80));
-    await page.locator('.sidebar').evaluate(el=>el.scrollTop=el.scrollHeight);
+    await page.locator('.proof-controls').evaluate(el=>el.scrollTop=el.scrollHeight);
     assert(await page.locator('#ligatures').isVisible());
+    const shortQR=await qr.boundingBox();assert(shortQR.y>=0&&shortQR.y+shortQR.height<=600,'QR remains accessible on a short desktop');
     await page.setViewportSize({width:1503,height:1047});await settle();
     await enter('#text-input','ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789');
     await enter('#size-number',240);
@@ -120,10 +130,13 @@ const {createHash}=require('node:crypto');
     await page.mouse.move(0,0);await page.screenshot({path:path.join(evidence,'grid-mobile.png')});
     await page.reload();
     await page.waitForFunction(()=>document.querySelector('#download').hidden===false);
+    await page.evaluate(()=>window.scrollTo(0,0));await settle();await qr.evaluate(img=>img.decode());
+    const mobileQR=await qr.boundingBox();assert(mobileQR.y>=0&&mobileQR.y+mobileQR.height<=844,'Mobile opens with the contact block visible');
+    await page.mouse.move(0,0);await page.screenshot({path:path.join(evidence,'attribution-mobile.png')});
     assert.deepEqual(errors,[]);assert.deepEqual(external,[]);assert.equal(hash(fs.readFileSync(fontPath)),info.sha256);
     const report={passed:true,font_sha256:info.sha256,version:info.version,upm:info.unitsPerEm,
       browser:'Chrome via Playwright',viewports:[[1503,1047],[390,844]],geometry_checked:chars,
-      checks:['loaded/downloaded bytes','reload and pagehide cleanup','five layout controls','paragraphs/alignment','shared grid scale and real metrics','guides do not edit glyphs','layers and value limits','coverage and deduplication','literal text and empty input','mode preservation','import/error/reset','fixed grid and typeset controls','short viewport scrolling','mobile width','no external requests or page errors'],
+      checks:['loaded/downloaded bytes','reload and pagehide cleanup','five layout controls','paragraphs/alignment','shared grid scale and real metrics','guides do not edit glyphs','layers and value limits','coverage and deduplication','literal text and empty input','mode preservation','import/error/reset','fixed grid and typeset controls','short viewport scrolling','mobile width','visible offline QR and a single creator line','no external requests or page errors'],
       limits:['Browser measurements are normalized to 1000 units per em','Direct imports have no parsed cmap','No system installation, full shaping or aesthetic approval']};
     fs.writeFileSync(path.join(evidence,'proof-check.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
   }finally{await browser.close();}
