@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "notes": "示例只约定可打印 ASCII；复制到项目后按实际委托修改，不代表本 skill 的默认覆盖、字重或造型。",
+  "coverage": {
+    "ranges": ["U+0020-007E"],
+    "characters": ""
+  },
+  "expect": {},
+  "metrics": {},
+  "reference_measurements": [],
+  "shaping": {
+    "samples": ["Hamburgefontsiv 0123456789", "Ss O0o B8b Dd Pp Qq Rr Uu"],
+    "pairs": ["AV", "To", "Yo", "nn", "no", "oo"],
+    "minimum_gap": null,
+    "exceptions": {},
+    "features": []
+  }
+}

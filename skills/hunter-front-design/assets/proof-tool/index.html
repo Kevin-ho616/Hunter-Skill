@@ -90,7 +90,7 @@ $('#font-file').addEventListener('change',async event=>{
   }catch{if(seq===importSequence)status('无法载入这个字体文件，当前字体已保留。请检查文件是否完整。',true);}
 });
 new ResizeObserver(entries=>{const available=Math.max(220,Math.floor(entries[0].contentRect.width));for(const suffix of ['range','number'])$('#width-'+suffix).max=available;state.width=Math.min(state.width,available);syncControl('width');applyStyle();}).observe($('#canvas'));
-window.addEventListener('pagehide',()=>{for(const f of fonts.values())if(f.url.startsWith('blob:'))URL.revokeObjectURL(f.url);});
+window.addEventListener('pagehide',()=>{for(const f of fonts.values())if(f.url?.startsWith('blob:'))URL.revokeObjectURL(f.url);});
 applyStyle();updateText();
 selectFont();
 if(config){

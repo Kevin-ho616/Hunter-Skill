@@ -24,6 +24,8 @@ const {createHash}=require('node:crypto');
     await page.goto(pathToFileURL(path.join(root,'index.html')).href);
     await page.waitForFunction(()=>document.querySelector('#download').hidden===false);
     assert.equal(hash(await (await loaded).body()),info.sha256,'Loaded font bytes must match this version');
+    await page.reload();
+    await page.waitForFunction(()=>document.querySelector('#download').hidden===false);
     assert((await page.locator('#font-name').innerText()).includes(info.version));
     const settle=()=>page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     const enter=async(selector,value)=>{await page.locator(selector).fill(String(value));await page.locator(selector).blur();await settle();};
@@ -116,10 +118,12 @@ const {createHash}=require('node:crypto');
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0);
     await page.locator('.preview-top').evaluate(el=>el.scrollIntoView({block:'start'}));
     await page.mouse.move(0,0);await page.screenshot({path:path.join(evidence,'grid-mobile.png')});
+    await page.reload();
+    await page.waitForFunction(()=>document.querySelector('#download').hidden===false);
     assert.deepEqual(errors,[]);assert.deepEqual(external,[]);assert.equal(hash(fs.readFileSync(fontPath)),info.sha256);
     const report={passed:true,font_sha256:info.sha256,version:info.version,upm:info.unitsPerEm,
       browser:'Chrome via Playwright',viewports:[[1503,1047],[390,844]],geometry_checked:chars,
-      checks:['loaded/downloaded bytes','five layout controls','paragraphs/alignment','shared grid scale and real metrics','guides do not edit glyphs','layers and value limits','coverage and deduplication','literal text and empty input','mode preservation','import/error/reset','fixed grid and typeset controls','short viewport scrolling','mobile width','no external requests or page errors'],
+      checks:['loaded/downloaded bytes','reload and pagehide cleanup','five layout controls','paragraphs/alignment','shared grid scale and real metrics','guides do not edit glyphs','layers and value limits','coverage and deduplication','literal text and empty input','mode preservation','import/error/reset','fixed grid and typeset controls','short viewport scrolling','mobile width','no external requests or page errors'],
       limits:['Browser measurements are normalized to 1000 units per em','Direct imports have no parsed cmap','No system installation, full shaping or aesthetic approval']};
     fs.writeFileSync(path.join(evidence,'proof-check.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
   }finally{await browser.close();}
