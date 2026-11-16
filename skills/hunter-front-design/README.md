@@ -20,6 +20,7 @@ npx -y skills@latest add Kevin-ho616/Hunter-Skill --skill hunter-front-design -g
 - [设计规则模板](assets/design-rules-template.md)：三案与选择记录，以及字高、笔画、字宽、转角、内白、开口、间距与光学例外。
 - [参考测量与项目参数](references/measurement-and-targets.md)：有参考时先校准测量，用 [参数示例](assets/font-targets.example.json) 记录项目自己的目标、容差、字符范围与塑形样例。
 - [审字经验](references/design-review.md)：共享部件、跨字符风格统一和常见修订误区。
+- [字距专项审校](references/spacing-and-kerning.md)：成稿时默认检查小写局部留白、大小写边界、窄字与下伸部、标点数字、附标替代字、上下文及适用的混排场景；按当前字形和目标字号决定收紧、放宽或保持，并记录结果。
 - [工程与封装](references/engineering-packaging.md)：命名、编码、字偶、真实 TTF/OTF、WOFF2/WOFF 与验证边界。
 - [版权与许可](references/copyright-and-license.md)：填写版权方与授权资料，在构建源写入，并逐字重、逐格式回读检查；开源底字保留原版权和许可，修改者署名另行追加。
 - [试排工具](references/proof-tool.md)：离线输入文字、调整排版、查看同尺度网格。

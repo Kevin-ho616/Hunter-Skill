@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "notes": "示例只约定可打印 ASCII；复制到项目后按实际委托修改，不代表本 skill 的默认覆盖、字重或造型。",
+  "notes": "示例只约定可打印 ASCII；复制到项目后按实际委托和 cmap 筛选、展开字距检查样本，不代表本 skill 的默认覆盖、字重或造型。字偶为审校候选，不预设调整方向、数值或统一最小间距。",
   "coverage": {
     "ranges": ["U+0020-007E"],
     "characters": ""
@@ -9,8 +9,23 @@
   "metrics": {},
   "reference_measurements": [],
   "shaping": {
-    "samples": ["Hamburgefontsiv 0123456789", "Ss O0o B8b Dd Pp Qq Rr Uu"],
-    "pairs": ["AV", "To", "Yo", "nn", "no", "oo"],
+    "samples": [
+      "Hamburgefontsiv 0123456789",
+      "Ss O0o B8b Dd Pp Qq Rr Uu",
+      "gives words a voice; woven years",
+      "over power box oxygen make token",
+      "exercise exotic more tone face zero",
+      "ii ij ji jj il li rn cl vv",
+      "L'A of Two f. V",
+      "111 808 $1,099.00 09:41 1/2"
+    ],
+    "pairs": [
+      "AV", "To", "Yo", "nn", "no", "oo", "HH", "HO", "OO",
+      "ve", "wo", "vo", "ov", "oy", "bx", "oz", "ke", "xe",
+      "ro", "to", "fo", "zo", "ex", "ij", "ji", "rn", "cl",
+      "f)", "v.", "r.", "T.", "V,", "LT", "Av", "Vo", "OV",
+      "PA", "RY", "oT", "ev", "ta", "rv"
+    ],
     "minimum_gap": null,
     "exceptions": {},
     "features": []

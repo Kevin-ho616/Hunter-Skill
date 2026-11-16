@@ -44,8 +44,9 @@ Shape & rhythm
 const config = window.FONT_PROOF_CONFIG;
 const $=s=>document.querySelector(s);
 const mobile=window.innerWidth<621;
-const defaults={size:mobile?72:190,line:1.05,tracking:0,paragraph:.35,width:mobile?330:760};
+const defaults={size:mobile?72:190,line:1.05,tracking:0,paragraph:.35,width:Math.max(220,Math.floor($('#canvas').clientWidth))};
 const state={...defaults,align:'left'};
+let requestedWidth=null;
 const controlSpecs=[['size','字号',12,320,1,'px'],['line','行距',.75,2.5,.05,'倍'],['tracking','字间距',-.08,.3,.005,'em'],['paragraph','段落间距',0,2.5,.05,'em'],['width','文本宽度',220,1600,1,'px']];
 const fonts=new Map([['sans-serif',{label:'系统示例 · 请载入待审字体',loaded:true,note:'当前显示系统无衬线示例。请载入待审字体，或用生成脚本绑定字体文件。'}]]);
 if(config)fonts.set('ProofFont',{...config,label:config.family+' / '+config.style+' · '+config.version,url:'./'+config.file+'?v='+config.sha256.slice(0,12),coverage:new Set(config.codepoints),loaded:false,note:'当前项目字体。未覆盖的文字可能使用系统回退；字偶与连字开关仅调用字体已有特性。'});
@@ -59,7 +60,7 @@ for(const [key,label,min,max,step,unit] of controlSpecs){
   $('#controls').append(control);
   for(const suffix of ['range','number']){
     const input=$(`#${key}-${suffix}`);input.value=state[key];
-    input.addEventListener('input',()=>{if(input.value==='')return;const v=Number(input.value);if(!Number.isFinite(v))return;state[key]=Math.min(Number(input.max),Math.max(min,v));syncControl(key,input);applyStyle();});
+    input.addEventListener('input',()=>{if(input.value==='')return;const v=Number(input.value);if(!Number.isFinite(v))return;state[key]=Math.min(Number(input.max),Math.max(min,v));if(key==='width')requestedWidth=state.width===Number(input.max)?null:state.width;syncControl(key,input);applyStyle();});
     input.addEventListener('change',()=>syncControl(key));
   }
 }
@@ -76,7 +77,7 @@ $('#text-input').addEventListener('input',()=>{updateText();document.querySelect
 document.querySelectorAll('[data-preset]').forEach(button=>button.addEventListener('click',()=>{const key=button.dataset.preset;$('#text-input').value=presets[key];if(!document.body.classList.contains('grid-mode'))state.size=key==='title'?defaults.size:key==='paragraph'?(mobile?36:56):(mobile?28:64);syncControl('size');document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));applyStyle();updateText();}));
 document.querySelectorAll('[data-align]').forEach(button=>button.addEventListener('click',()=>{state.align=button.dataset.align;document.querySelectorAll('[data-align]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));applyStyle();}));
 for(const id of ['kerning','ligatures'])$('#'+id).addEventListener('change',applyStyle);
-$('#reset').addEventListener('click',()=>{Object.assign(state,defaults,{align:'left',width:Math.min(defaults.width,Number($('#width-range').max))});for(const [key]of controlSpecs)syncControl(key);$('#text-input').value=presets.title;$('#kerning').checked=true;$('#ligatures').checked=true;document.querySelectorAll('[data-align]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.align==='left')));document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset==='title')));window.fontGrid?.reset();applyStyle();updateText();});
+$('#reset').addEventListener('click',()=>{requestedWidth=null;Object.assign(state,defaults,{align:'left',width:Number($('#width-range').max)});for(const [key]of controlSpecs)syncControl(key);$('#text-input').value=presets.title;$('#kerning').checked=true;$('#ligatures').checked=true;document.querySelectorAll('[data-align]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.align==='left')));document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset==='title')));window.fontGrid?.reset();applyStyle();updateText();});
 $('#font-select').addEventListener('change',selectFont);
 $('#import-button').addEventListener('click',()=>$('#font-file').click());
 $('#font-file').addEventListener('change',async event=>{
@@ -90,7 +91,7 @@ $('#font-file').addEventListener('change',async event=>{
     $('#font-select').add(new Option(file.name,family));$('#font-select').value=family;selectFont();
   }catch{if(seq===importSequence)status('无法载入这个字体文件，当前字体已保留。请检查文件是否完整。',true);}
 });
-new ResizeObserver(entries=>{const available=Math.max(220,Math.floor(entries[0].contentRect.width));for(const suffix of ['range','number'])$('#width-'+suffix).max=available;state.width=Math.min(state.width,available);syncControl('width');applyStyle();}).observe($('#canvas'));
+new ResizeObserver(entries=>{const available=Math.max(220,Math.floor(entries[0].contentRect.width));for(const suffix of ['range','number'])$('#width-'+suffix).max=available;state.width=Math.min(requestedWidth??available,available);syncControl('width');applyStyle();}).observe($('#canvas'));
 window.addEventListener('pagehide',()=>{for(const f of fonts.values())if(f.url?.startsWith('blob:'))URL.revokeObjectURL(f.url);});
 applyStyle();updateText();
 selectFont();

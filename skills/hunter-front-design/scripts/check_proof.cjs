@@ -10,7 +10,9 @@ const {createHash}=require('node:crypto');
   assert(process.argv[2],'Usage: node check_proof.cjs /absolute/proof-directory');
   const root=path.resolve(process.argv[2]);
   const info=JSON.parse(fs.readFileSync(path.join(root,'font-info.json'),'utf8'));
+  assert(fs.readFileSync(path.join(root,'index.html'),'utf8').includes('./font-config.js?v='+info.sha256.slice(0,12)),'Config URL must identify the current font revision');
   const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+  for(const asset of ['grid.js','grid.css'])assert(fs.readFileSync(path.join(root,'index.html'),'utf8').includes('./'+asset+'?v='+hash(fs.readFileSync(path.join(root,asset))).slice(0,12)),'UI asset cache key must match its bytes');
   const fontPath=path.join(root,info.file);
   assert.equal(hash(fs.readFileSync(fontPath)),info.sha256);
   const evidence=path.join(root,'checks');fs.mkdirSync(evidence,{recursive:true});
@@ -38,6 +40,21 @@ const {createHash}=require('node:crypto');
     assert.equal(await page.locator('#font-rights').count(),0);
     await page.mouse.move(0,0);await page.screenshot({path:path.join(evidence,'attribution-desktop.png')});
     const enter=async(selector,value)=>{await page.locator(selector).fill(String(value));await page.locator(selector).blur();await settle();};
+    const fullWidth=async()=>{
+      const widths=await page.evaluate(()=>[document.querySelector('#canvas').clientWidth,document.querySelector('#preview').getBoundingClientRect().width]);
+      assert(Math.abs(widths[0]-widths[1])<2,`Automatic preview width must fill its canvas: ${widths}`);
+    };
+    await fullWidth();
+    await page.setViewportSize({width:390,height:844});await settle();await fullWidth();
+    await page.setViewportSize({width:1916,height:1240});await settle();await fullWidth();
+    await enter('#width-number',600);
+    await page.setViewportSize({width:390,height:844});await settle();await fullWidth();
+    await page.setViewportSize({width:1916,height:1240});await settle();
+    assert.equal(await page.locator('#width-number').inputValue(),'600','Restore the explicit width after a narrow viewport');
+    await enter('#width-number',await page.locator('#width-number').getAttribute('max'));
+    await page.setViewportSize({width:2400,height:1240});await settle();await fullWidth();
+    await enter('#width-number',330);await page.locator('#reset').click();await settle();await fullWidth();
+    await page.setViewportSize({width:1503,height:1047});await settle();
     const download=page.waitForEvent('download');await page.locator('#download').click();
     assert.equal(hash(fs.readFileSync(await (await download).path())),info.sha256);
 
@@ -66,6 +83,34 @@ const {createHash}=require('node:crypto');
     }
     for(const [key,value]of Object.entries(info.guides))assert.equal(Number(await page.locator('#grid-'+key).inputValue()),value);
     const glyphBefore=await page.locator('.glyph-text').first().evaluate(el=>el.outerHTML);
+    assert.equal(await page.locator('.glyph-zoom-trigger').count(),measured.length);
+    const firstCell=page.locator('.glyph-cell').first(),magnify=firstCell.locator('.glyph-zoom-trigger'),zoom=page.locator('#glyph-zoom');
+    const original=await firstCell.locator('svg').evaluate(el=>({view:el.getAttribute('viewBox'),glyph:el.querySelector('.glyph-text').outerHTML,scale:el.getScreenCTM().a}));
+    const corner=await magnify.evaluate(el=>{const a=el.getBoundingClientRect(),b=el.parentElement.getBoundingClientRect();return [b.right-a.right,b.bottom-a.bottom];});
+    assert(corner.every(v=>v>=0&&v<=12),'Zoom control stays in the lower-right corner');
+    const icon=await magnify.evaluate(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el),i=getComputedStyle(el,':before');return [r.width,r.height,s.borderRadius,el.textContent.trim(),el.title,i.width,i.height,i.backgroundImage];});
+    assert.deepEqual(icon.slice(0,7),[32,32,'50%','','放大','18px','18px'],'Use the approved round icon without a visible text label');
+    assert(icon[7].includes('image/svg+xml'),'The magnifier is available offline');
+    assert.equal(await magnify.getAttribute('aria-label'),'放大 '+await firstCell.getAttribute('data-char'));
+    await magnify.click();await settle();assert(await zoom.isVisible());
+    const enlarged=await zoom.locator('svg').evaluate(el=>({view:el.getAttribute('viewBox'),glyph:el.querySelector('.glyph-text').outerHTML,x:el.getScreenCTM().a,y:el.getScreenCTM().d,ids:[...el.querySelectorAll('pattern')].map(p=>p.id)}));
+    assert.equal(enlarged.view,original.view);assert.equal(enlarged.glyph,original.glyph);
+    assert(Math.abs(enlarged.x-enlarged.y)<1e-6);assert(enlarged.x>=original.scale*2-.001&&enlarged.x>=.649);
+    assert(enlarged.ids.every(id=>id.startsWith('zoom-')));assert.equal(new Set(enlarged.ids).size,enlarged.ids.length);
+    await page.mouse.move(0,0);await page.screenshot({path:path.join(evidence,'zoom-desktop.png')});
+    await page.keyboard.press('Escape');await settle();assert(await zoom.isHidden());
+    assert(await magnify.evaluate(el=>document.activeElement===el),'Closing restores focus to the original control');
+    await magnify.click();await settle();await page.mouse.click(2,2);await settle();
+    assert(await zoom.isHidden(),'Clicking outside closes the floating view');
+    await page.locator('#grid-visible').uncheck();await settle();await magnify.click();await settle();
+    assert(await zoom.locator('.grid-layer').isHidden());await zoom.locator('.glyph-zoom-head button').click();await settle();
+    await page.locator('#grid-visible').check();await settle();await magnify.click();
+    await page.locator('#text-input').evaluate(el=>{el.value='H';el.dispatchEvent(new Event('input',{bubbles:true}));});
+    await settle();assert(await zoom.isHidden(),'A changed specimen closes the old detail view');
+    await enter('#text-input',chars.join(''));
+    await enter('#size-number',await page.locator('#size-number').getAttribute('max'));await magnify.click();await settle();
+    assert(await zoom.locator('.glyph-zoom-stage').evaluate(el=>el.scrollHeight>el.clientHeight),'Large details stay scrollable');
+    await zoom.locator('.glyph-zoom-head button').click();await enter('#size-number',88);
     for(const [key,value]of Object.entries({step:40,baseline:25,cap:720,xheight:530,ascender:760,descender:-230}))await enter('#grid-'+key,value);
     assert.equal(await page.locator('pattern').first().getAttribute('width'),'40');
     assert.equal(await page.locator('.grid-guides .baseline').first().getAttribute('y1'),'-25');
@@ -81,6 +126,7 @@ const {createHash}=require('node:crypto');
     let cp=0x10fffd;while(info.codepoints.includes(cp))cp--;
     await enter('#text-input',chars[0].repeat(2)+' \n'+String.fromCodePoint(cp));
     assert.equal(await page.locator('.glyph-cell').count(),2);assert.equal(await page.locator('.glyph-missing').count(),1);
+    assert.equal(await page.locator('.glyph-zoom-trigger').count(),1,'Missing glyphs have no false detail view');
     await enter('#text-input','<img src=x onerror=alert(1)>');assert.equal(await page.locator('#glyph-board img').count(),0);
     await enter('#text-input',' \n');assert.equal(await page.locator('.glyph-cell').count(),0);
     await page.locator('[data-view="typeset"]').click();
@@ -128,6 +174,12 @@ const {createHash}=require('node:crypto');
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0);
     await page.locator('.preview-top').evaluate(el=>el.scrollIntoView({block:'start'}));
     await page.mouse.move(0,0);await page.screenshot({path:path.join(evidence,'grid-mobile.png')});
+    const mobileIcon=await page.locator('.glyph-zoom-trigger').first().boundingBox();assert.equal(mobileIcon.width,32);assert.equal(mobileIcon.height,32);
+    await page.locator('.glyph-zoom-trigger').first().click();await settle();
+    const zoomBox=await zoom.boundingBox();assert(zoomBox.x>=6&&zoomBox.y>=6&&zoomBox.x+zoomBox.width<=390-6&&zoomBox.y+zoomBox.height<=844-6,'Mobile floating view stays inside the viewport');
+    assert(await zoom.locator('.glyph-zoom-head button').isVisible());
+    await page.mouse.move(0,0);await page.screenshot({path:path.join(evidence,'zoom-mobile.png')});
+    await zoom.locator('.glyph-zoom-head button').click();await settle();
     await page.reload();
     await page.waitForFunction(()=>document.querySelector('#download').hidden===false);
     await page.evaluate(()=>window.scrollTo(0,0));await settle();await qr.evaluate(img=>img.decode());
@@ -135,8 +187,8 @@ const {createHash}=require('node:crypto');
     await page.mouse.move(0,0);await page.screenshot({path:path.join(evidence,'attribution-mobile.png')});
     assert.deepEqual(errors,[]);assert.deepEqual(external,[]);assert.equal(hash(fs.readFileSync(fontPath)),info.sha256);
     const report={passed:true,font_sha256:info.sha256,version:info.version,upm:info.unitsPerEm,
-      browser:'Chrome via Playwright',viewports:[[1503,1047],[390,844]],geometry_checked:chars,
-      checks:['loaded/downloaded bytes','reload and pagehide cleanup','five layout controls','paragraphs/alignment','shared grid scale and real metrics','guides do not edit glyphs','layers and value limits','coverage and deduplication','literal text and empty input','mode preservation','import/error/reset','fixed grid and typeset controls','short viewport scrolling','mobile width','visible offline QR and a single creator line','no external requests or page errors'],
+      browser:'Chrome via Playwright',viewports:[[1503,1047],[390,844],[1916,1240],[2400,1240]],geometry_checked:chars,
+      checks:['versioned configuration URL','versioned UI resources','round magnifier icon and floating zoom, true geometry, layers, close/Esc/focus and mobile bounds','loaded/downloaded bytes','reload and pagehide cleanup','automatic width through narrow/wide transitions','manual width restoration and reset','five layout controls','paragraphs/alignment','shared grid scale and real metrics','guides do not edit glyphs','layers and value limits','coverage and deduplication','literal text and empty input','mode preservation','import/error/reset','fixed grid and typeset controls','short viewport scrolling','mobile width','visible offline QR and a single creator line','no external requests or page errors'],
       limits:['Browser measurements are normalized to 1000 units per em','Direct imports have no parsed cmap','No system installation, full shaping or aesthetic approval']};
     fs.writeFileSync(path.join(evidence,'proof-check.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
   }finally{await browser.close();}

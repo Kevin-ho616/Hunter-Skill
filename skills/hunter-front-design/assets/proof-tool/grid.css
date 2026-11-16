@@ -23,7 +23,20 @@ button:disabled,input:disabled{cursor:default}
 .glyph-cell{margin:0;flex:none}
 .glyph-label{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px;font-size:14px;font-weight:600;min-width:0}
 .glyph-label span{font-size:11px;color:#858585;font-weight:400;font-variant-numeric:tabular-nums}
-.glyph-cell svg{display:block;background:#fcfcfb;overflow:visible}
+.glyph-cell svg,.glyph-zoom-stage svg{display:block;background:#fcfcfb;overflow:visible}
+.glyph-stage{position:relative}
+.glyph-zoom-trigger{position:absolute;right:8px;bottom:8px;display:grid;place-items:center;width:32px;height:32px;padding:0;border-radius:50%;background:#fff;border-color:#c8cecf;box-shadow:0 1px 4px #00000010}
+.glyph-zoom-trigger:before{content:"";width:18px;height:18px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23161616' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='m15.5 15.5 4.5 4.5'/%3E%3C/svg%3E") center/contain no-repeat}
+.glyph-zoom-dialog{width:min(900px,calc(100vw - 24px));max-width:none;max-height:calc(100dvh - 24px);padding:18px;border:1px solid #c8cecf;border-radius:8px;overflow:hidden;box-shadow:0 18px 70px #0003;color:var(--ink);background:#fff}
+.glyph-zoom-dialog[open]{display:flex;flex-direction:column}
+.glyph-zoom-dialog::backdrop{background:#1116}
+.glyph-zoom-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-shrink:0}
+.glyph-zoom-head h2{font-size:18px;margin:0}
+.glyph-zoom-head button{font-size:13px;padding:5px 12px}
+#glyph-zoom-help{font-size:12px;color:var(--muted);margin:8px 0 12px;flex-shrink:0}
+.glyph-zoom-stage{overflow:auto;max-height:70dvh;min-height:0;overscroll-behavior:contain}
+.glyph-zoom-stage svg{max-width:none;flex:none;margin-inline:auto}
+.glyph-zoom-metrics{flex-shrink:0}
 .glyph-metrics{font-size:11px;line-height:1.65;font-variant-numeric:tabular-nums;color:#626b73;margin-top:7px;white-space:nowrap}
 .glyph-missing{font-size:12px;color:#a44e29;line-height:1.6;padding:16px 0}
 .glyph-text{font-synthesis:none;font-kerning:none;font-variant-ligatures:none;fill:#161616}

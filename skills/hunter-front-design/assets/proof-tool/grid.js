@@ -12,6 +12,46 @@
   const context = document.createElement('canvas').getContext('2d');
   const board = $('#glyph-board');
   let frame;
+  const zoom = document.createElement('dialog');
+  zoom.id = 'glyph-zoom';
+  zoom.className = 'glyph-zoom-dialog';
+  zoom.setAttribute('aria-labelledby', 'glyph-zoom-title');
+  zoom.setAttribute('aria-describedby', 'glyph-zoom-help');
+  zoom.innerHTML = '<div class="glyph-zoom-head"><h2 id="glyph-zoom-title"></h2><button type="button" autofocus>关闭</button></div><p id="glyph-zoom-help">已放大，可滚动查看细节。按 Esc 关闭。</p><div class="glyph-zoom-stage"></div><div class="glyph-zoom-metrics"></div>';
+  document.body.append(zoom);
+  const zoomStage = zoom.querySelector('.glyph-zoom-stage');
+  let zoomOpener;
+  zoom.querySelector('button').addEventListener('click', () => zoom.close());
+  zoom.addEventListener('click', event => { if (event.target === zoom) zoom.close(); });
+  zoom.addEventListener('close', () => {
+    zoomStage.replaceChildren();
+    if (zoomOpener?.isConnected) zoomOpener.focus();
+    zoomOpener = null;
+  });
+
+  function openZoom(svg, char, code, metrics, opener) {
+    const enlarged = svg.cloneNode(true);
+    const scale = Math.max(.65, svg.getScreenCTM().a * 2);
+    const box = svg.viewBox.baseVal;
+    enlarged.setAttribute('width', box.width * scale);
+    enlarged.setAttribute('height', box.height * scale);
+    enlarged.setAttribute('aria-label', char + ' 的放大校样');
+    for (const pattern of enlarged.querySelectorAll('pattern')) {
+      const previous = pattern.id;
+      pattern.id = 'zoom-' + previous;
+      for (const rect of enlarged.querySelectorAll('[fill]')) {
+        if (rect.getAttribute('fill') === 'url(#' + previous + ')') rect.setAttribute('fill', 'url(#' + pattern.id + ')');
+      }
+    }
+    for (const path of enlarged.querySelectorAll('pattern path')) path.setAttribute('stroke-width', .6 / scale);
+    for (const name of ['hide-grid', 'hide-guides', 'hide-bounds']) zoomStage.classList.toggle(name, board.classList.contains(name));
+    $('#glyph-zoom-title').textContent = char + ' · ' + code;
+    zoom.querySelector('.glyph-zoom-metrics').replaceChildren(metrics.cloneNode(true));
+    zoomStage.replaceChildren(enlarged);
+    zoomOpener = opener;
+    zoom.showModal();
+    zoomStage.scrollTo(0, 0);
+  }
   for (const [key, label, value, min, max, step] of fields) {
     const item = document.createElement('label');
     item.htmlFor = 'grid-' + key;
@@ -76,6 +116,7 @@
   }
 
   function render() {
+    if (zoom.open) zoom.close();
     if (board.hidden) return;
     board.replaceChildren();
     const family = $('#font-select').value;
@@ -148,12 +189,20 @@
         for (const x of [0, m.advance]) box.append(svgElement('line', {x1: x, x2: x, y1: -top, y2: -bottom}));
         box.append(svgElement('rect', {x: m.left, y: -m.top, width: m.right - m.left, height: m.top - m.bottom}));
         svg.append(box);
-        figure.append(svg);
+        const stage = document.createElement('div');
+        stage.className = 'glyph-stage';
+        stage.append(svg);
+        figure.append(stage);
         const metrics = document.createElement('div');
         metrics.className = 'glyph-metrics';
         metrics.textContent = `字面 ${Math.round(m.right - m.left)} · 占位 ${Math.round(m.advance)}`;
         metrics.append(document.createElement('br'), `左 ${Math.round(m.left)} · 右 ${Math.round(m.advance - m.right)} u`);
         figure.append(metrics);
+        const magnify = document.createElement('button');
+        Object.assign(magnify, {type: 'button', className: 'glyph-zoom-trigger', title: '放大'});
+        magnify.setAttribute('aria-label', '放大 ' + m.char);
+        magnify.addEventListener('click', () => openZoom(svg, m.char, code.textContent, metrics, magnify));
+        stage.append(magnify);
       }
       board.append(figure);
     }

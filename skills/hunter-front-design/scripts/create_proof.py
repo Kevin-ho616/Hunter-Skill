@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import shutil
 
-from fontTools.pens.boundsPen import BoundsPen
+from fontTools.pens.boundsPen import BoundsPen, ControlBoundsPen
 from fontTools.ttLib import TTFont
 
 
@@ -62,6 +62,10 @@ def inspect_font(source, raw):
                 if 'glyf' in font:
                     glyph = font['glyf'][glyph_name]
                     browser_box = [bearing, glyph.yMin, bearing + glyph.xMax - glyph.xMin, glyph.yMax]
+                else:
+                    control = ControlBoundsPen(glyphs)
+                    glyphs[glyph_name].draw(control)
+                    browser_box = list(control.bounds)
                 metrics[char] = {'bounds': list(box), 'browserBounds': browser_box, 'advance': advance}
         name = font['name']
         features = sorted({record.FeatureTag for tag in ('GPOS', 'GSUB') if tag in font
@@ -96,6 +100,12 @@ def create_proof(source, output):
     config = {key: info[key] for key in ('family', 'style', 'version', 'filename', 'file', 'sha256',
                                         'unitsPerEm', 'codepoints', 'guides', 'guideSources')}
     (output / 'font-config.js').write_text('window.FONT_PROOF_CONFIG = ' + json.dumps(config, ensure_ascii=True) + ';\n', encoding='utf-8')
+    index = output / 'index.html'
+    markup = index.read_text(encoding='utf-8').replace('./font-config.js', './font-config.js?v=' + info['sha256'][:12])
+    for asset in ('grid.js', 'grid.css'):
+        digest = hashlib.sha256((output / asset).read_bytes()).hexdigest()[:12]
+        markup = markup.replace('./' + asset, './' + asset + '?v=' + digest)
+    index.write_text(markup, encoding='utf-8')
     return info
 
 
