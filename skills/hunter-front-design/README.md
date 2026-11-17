@@ -17,6 +17,7 @@ npx -y skills@latest add Kevin-ho616/Hunter-Skill --skill hunter-front-design -g
 ## 内容
 
 - [SKILL.md](SKILL.md)：执行流程与验收要求。
+- [覆盖范围与按需专项](references/coverage-and-specialties.md)：识别家族、正文屏显、文字/竖排、可变/彩色、专业符号及网页子集等任务，明确完成证据与现有工具边界；不是这些领域均已提供专用自动生产工具。
 - [设计规则模板](assets/design-rules-template.md)：三案与选择记录，以及字高、笔画、字宽、转角、内白、开口、间距与光学例外。
 - [参考测量与项目参数](references/measurement-and-targets.md)：有参考时先校准测量，用 [参数示例](assets/font-targets.example.json) 记录项目自己的目标、容差、字符范围与塑形样例。
 - [审字经验](references/design-review.md)：共享部件、跨字符风格统一和常见修订误区。
@@ -82,6 +83,6 @@ node scripts/check_proof.cjs /path/to/new-proof
 
 目前已验证的制作经验以拉丁展示字体为主，另有中文开源骨架定制的专项流程。逐字原创中文、其他复杂文字塑形、可变字体和彩色字体仍需要额外的专门设计与验证。网格规则不是机械等宽要求；光学校正要结合具体风格和目标字号判断。
 
-**本目录内 Skill 文本、模板及工具代码以 [MIT License](LICENSE) 开源。** 这一授权只适用于本目录，不改变仓库内其他 Skill 的授权。本目录不包含 Hunter Block 字体文件、品牌 Logo、海报素材或第三方字体；这些资产不因 Skill 开源而自动获得使用或再分发许可。依赖软件各自遵循原许可。
+**本目录内 Skill 文本、模板及工具代码以 [MIT License](LICENSE) 开源。** 这一授权只适用于本目录，不改变仓库内其他 Skill 的授权。试排模板附有猎人品牌图像与公众号二维码；这些品牌素材不因工具代码开源而自动获得其他用途或再分发许可，其他项目应按自身品牌替换。本目录不包含 Hunter Block 字体文件或第三方字库；字体、海报及第三方资产的授权另按实际来源确认。依赖软件各自遵循原许可。
 
 字体能被解析、浏览器能显示、进程内注册成功、系统安装完成和目标软件兼容是不同的验收结果。正式发布自己的字体前，请按实际目标完成检查并明确字体授权。
