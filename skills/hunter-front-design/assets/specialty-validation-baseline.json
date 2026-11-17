@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-17",
+  "python": "3.12.13",
+  "unit_tests": 19,
+  "specialty_cases": 26,
+  "editable_source_checks": 4,
+  "fontmake_outputs": 25,
+  "variable_locations": 36,
+  "browser_fonts": 16,
+  "mathml_custom_font_tokens": 10,
+  "ots_positive": 9,
+  "ots_truncated_negative": "rejected",
+  "fontbakery_profile": "universal --skip-network",
+  "fontbakery_result": {
+    "(not finished)": 0,
+    "INFO": 12,
+    "PASS": 300,
+    "SKIP": 160
+  },
+  "ordinary_proof": "pass",
+  "technical_book_pages": 6,
+  "native": [
+    "CoreText process registration/shaping: Latin and Arabic",
+    "macOS user install: four styles",
+    "Word 16.115 PDF: four real embedded members",
+    "CoreText update 1.000 to 1.001 after atomic replacement",
+    "test members removed and unavailable in fresh CoreText process"
+  ],
+  "limits": [
+    "Tool verification is not optical or language expert approval.",
+    "Windows, Adobe, mobile, actual CDN and physical print were not tested.",
+    "Original CJK is a twelve-character control set, not a complete Chinese typeface.",
+    "COLR v0/v1 and sbix tested; SVG and CBDT production need their own target-format samples."
+  ],
+  "script_sha256": {
+    "scripts/build_specialty_samples.py": "012c0e2624154ac30da20a3c4146890df27ce5d0fb6f2443a569e25738158f5b",
+    "scripts/check_coretext.swift": "b0fb7e00a36ff2d6ebb6ce9b244111e910ba9ea8bcbb09e66dea276d25357470",
+    "scripts/check_font.py": "0fa3db5b37afb3378d523ed114325bb4b2c9e4638849b2e11b59615259d9c488",
+    "scripts/check_proof.cjs": "f755a31ba0da56ba7b9e00c37fa40c7971ef62e640ce195f97741688328ebaf1",
+    "scripts/check_source.py": "96a38628329cd9f2de43417a9da31e3c233b64437a34a98bd771ce8580f8145c",
+    "scripts/check_specialties.py": "2321d3b1879013cb5942b1962f0f4d79e79861bde407bbeae4aa5c9ebcf2a3a4",
+    "scripts/check_specialty_browser.cjs": "398f1b8e9be6fb557e62da1030ca51c960178250a13ed11301d2ac8af26583d8",
+    "scripts/create_font_book.py": "15044289ec2eeabffba96bd12c8fd43e4581c702625653bf5549ee509bb3d622",
+    "scripts/create_proof.py": "1692266b432e0ae5bcfabee49d212083dc8d798c55b15a5cbaa935218b12b528",
+    "scripts/fetch_specialty_samples.py": "e7ff1531a1b7560dbab9b4a0ffeb1686c11d0be1df40d936e4a6e987492f2a4c",
+    "scripts/font_common.py": "fb8ff6af0dd99f2fe5e62811e9023ddb0186f201e77204f5ad81c2694fe18640",
+    "scripts/measure_reference.py": "b48f4fee905bfe8ef35a267e93d19f3a103e8334998e31b23533a946943fd7a8",
+    "scripts/package_project.py": "345fe3b55530d32a2af93de11cfb15c74d8a7db91362efb9a8c3038552df2abe",
+    "scripts/render_font_book.cjs": "cc07417ffd854edd9fe1df9f8629672356a9dff5de3aa61e6b4daf8e020a9720",
+    "scripts/render_small_text.py": "efbc219eb0972dc1ffbf67d3f3e370012d0889ab200faca10eb1ae0f48a61735",
+    "scripts/retire_font_artifacts.py": "dcfbd625f080233ccf554c95ebd12918c9a79e47fa5dadbc0af4f900889d8a9e",
+    "scripts/test_font_tools.py": "27438f86e4e9144b4b3debbae764dbe4ec662b2ef684a419fb137ef02a75c884",
+    "scripts/test_specialties.py": "edce9a81fe5ca34b027f66bd15aa138779d8f8848c680fc6519be8f887f9c34d",
+    "scripts/validate_specialty_samples.py": "44471501eb899bbffb764381d12726a4c2637bad20b4e6cf85f40cfa9a9d5635"
+  }
+}

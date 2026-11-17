@@ -1,0 +1,21 @@
+{
+  "release": false,
+  "files": [
+    {"path": "fonts/Family-Regular.ttf", "role": "font", "sha256": "REPLACE_WITH_ACTUAL_SHA256"},
+    {"path": "source/build.py", "role": "source", "sha256": "REPLACE_WITH_ACTUAL_SHA256"},
+    {"path": "licenses/LICENSE.txt", "role": "license", "sha256": "REPLACE_WITH_ACTUAL_SHA256"},
+    {"path": "proof/index.html", "role": "proof", "sha256": "REPLACE_WITH_ACTUAL_SHA256"},
+    {"path": "reports/engineering.json", "role": "report", "sha256": "REPLACE_WITH_ACTUAL_SHA256"}
+  ],
+  "gates": [
+    {"id": "scope-and-approval", "required": true, "state": "pending", "reason": "Record approved scope, design and actual evidence."},
+    {"id": "source-build-and-dependencies", "required": true, "state": "pending", "reason": "Rebuild current exports from the authoritative source."},
+    {"id": "optical-and-spacing", "required": true, "state": "pending", "reason": "Review current glyphs and spacing at actual sizes, including i/j nesting."},
+    {"id": "engineering-and-shaping", "required": true, "state": "pending", "reason": "Run the declared general and specialty plans; bind results to current font SHA256."},
+    {"id": "rights-and-names", "required": true, "state": "pending", "reason": "Read back confirmed name/license records for every exported format."},
+    {"id": "proof-and-specimen", "required": true, "state": "pending", "reason": "Verify downloaded bytes, actual layout, missing glyphs and current PDF."},
+    {"id": "applicable-specialties", "required": true, "state": "pending", "reason": "Split all applicable categories into individual gates; justify non-applicable categories."},
+    {"id": "target-platforms", "required": true, "state": "pending", "reason": "Test the actual commissioned OS/application/install-update/PDF workflow."},
+    {"id": "delivery-and-maintenance", "required": true, "state": "pending", "reason": "Hash and reopen ZIP; preserve sources, licenses and other project dependencies before authorized cleanup."}
+  ]
+}

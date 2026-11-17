@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "serif",
+      "repository": "google/fonts",
+      "commit": "7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "font": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/sourceserif4/SourceSerif4%5Bopsz%2Cwght%5D.ttf",
+        "sha256": "97b2d4da6e3cb494b5a1e66ae176914d852ccabef49e0c02c0df25f3e39aca0b",
+        "bytes": 1209508,
+        "file": "SourceSerif4[opsz,wght].ttf"
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/sourceserif4/OFL.txt",
+        "sha256": "5f94c3fd3a23131a417ab5a0c8452de57e70c3cfb9f604d88241f7065ebf9fd9",
+        "bytes": 4400,
+        "file": "OFL.txt"
+      }
+    },
+    {
+      "id": "serif-italic",
+      "repository": "google/fonts",
+      "commit": "7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "font": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/sourceserif4/SourceSerif4-Italic%5Bopsz%2Cwght%5D.ttf",
+        "sha256": "15fbc7e4679489a501998c3669272637a6646388ef7e4bd77eebb5bf967a1f42",
+        "bytes": 855432,
+        "file": "SourceSerif4-Italic[opsz,wght].ttf"
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/sourceserif4/OFL.txt",
+        "sha256": "5f94c3fd3a23131a417ab5a0c8452de57e70c3cfb9f604d88241f7065ebf9fd9",
+        "bytes": 4400,
+        "file": "OFL.txt"
+      }
+    },
+    {
+      "id": "script",
+      "repository": "google/fonts",
+      "commit": "7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "font": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/dancingscript/DancingScript%5Bwght%5D.ttf",
+        "sha256": "21808625578fe8d8cd10cb684be546dca077b27cd03a53a2f1ec11dc743c924c",
+        "bytes": 133636,
+        "file": "DancingScript[wght].ttf"
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/dancingscript/OFL.txt",
+        "sha256": "6f090277c00af96651ce6dbcc38ff1591047a3bffef486e80b6a32e8276a8201",
+        "bytes": 4443,
+        "file": "OFL.txt"
+      }
+    },
+    {
+      "id": "arabic",
+      "repository": "google/fonts",
+      "commit": "7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "font": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/notosansarabic/NotoSansArabic%5Bwdth%2Cwght%5D.ttf",
+        "sha256": "63111b5b2e074dd48cc67692e0a2726d86ee94c1c37fe8598257b7b4e87e869e",
+        "bytes": 844676,
+        "file": "NotoSansArabic[wdth,wght].ttf"
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/notosansarabic/OFL.txt",
+        "sha256": "07fc70bfeb985cc1a87a8587d0a0c80bab11c86c9dc3fd95b6f0cb332f983e96",
+        "bytes": 4382,
+        "file": "OFL.txt"
+      }
+    },
+    {
+      "id": "devanagari",
+      "repository": "google/fonts",
+      "commit": "7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "font": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/notosansdevanagari/NotoSansDevanagari%5Bwdth%2Cwght%5D.ttf",
+        "sha256": "14ec4af41f27482216d1c2229f417ff9b1425e1babb014e57d1d40d03229853e",
+        "bytes": 641944,
+        "file": "NotoSansDevanagari[wdth,wght].ttf"
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/notosansdevanagari/OFL.txt",
+        "sha256": "a216f6f8d85c7228093e0ee5e258d9d377e6671f68acb4db1930b29583d0f331",
+        "bytes": 4386,
+        "file": "OFL.txt"
+      }
+    },
+    {
+      "id": "thai",
+      "repository": "google/fonts",
+      "commit": "7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "font": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/notosansthai/NotoSansThai%5Bwdth%2Cwght%5D.ttf",
+        "sha256": "5a1c559bb539583c8a1fd99d1c5b9491e5e14478c9cd2bd0970d5c3096cc9ef8",
+        "bytes": 218652,
+        "file": "NotoSansThai[wdth,wght].ttf"
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/notosansthai/OFL.txt",
+        "sha256": "2e98fd23a52d253db8612cd5942c8f2ff4111b21d2367050fdca91d8ccc374a0",
+        "bytes": 4380,
+        "file": "OFL.txt"
+      }
+    },
+    {
+      "id": "mono",
+      "repository": "google/fonts",
+      "commit": "7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "font": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/notosansmono/NotoSansMono%5Bwdth%2Cwght%5D.ttf",
+        "sha256": "2cb2adb378a8f574213e23df697050b83c54c27df465a2015552740b2769a081",
+        "bytes": 1708408,
+        "file": "NotoSansMono[wdth,wght].ttf"
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/notosansmono/OFL.txt",
+        "sha256": "cee9892f9f0cc8fe882c9e9537ee6a89621d86ee7ceaf70b02e2b2b1c25c061a",
+        "bytes": 4396,
+        "file": "OFL.txt"
+      }
+    },
+    {
+      "id": "math",
+      "repository": "google/fonts",
+      "commit": "7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "font": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/stixtwomath/STIXTwoMath-Regular.ttf",
+        "sha256": "562551b15b836e6e01d1b7350909baf3c8c8d83260c1190fbf4544333e6936de",
+        "bytes": 1517976,
+        "file": "STIXTwoMath-Regular.ttf"
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/stixtwomath/OFL.txt",
+        "sha256": "0c8825913b60d858aacdb33c4ca6660a7d64b0d6464702efbb19313f5765861a",
+        "bytes": 4519,
+        "file": "OFL.txt"
+      }
+    },
+    {
+      "id": "emoji",
+      "repository": "google/fonts",
+      "commit": "7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "font": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/notocoloremoji/NotoColorEmoji-Regular.ttf",
+        "sha256": "4d82a18d8d95f60ba883ce242bbadbf84a576e987745dd7ba38d71c67cff2d73",
+        "bytes": 25332736,
+        "file": "NotoColorEmoji-Regular.ttf"
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/notocoloremoji/OFL.txt",
+        "sha256": "ac564676d10054a8445923dfc2dfb13c042d97888bd27c1b6ec6dfe89a9d8d62",
+        "bytes": 4386,
+        "file": "OFL.txt"
+      }
+    },
+    {
+      "id": "music",
+      "repository": "steinbergmedia/bravura",
+      "commit": "37b194378b710cc40e406ab6c4b07608bb9548ae",
+      "font": {
+        "url": "https://raw.githubusercontent.com/steinbergmedia/bravura/37b194378b710cc40e406ab6c4b07608bb9548ae/redist/otf/Bravura.otf",
+        "sha256": "cdf0f893ee1fdb64b7f6713d71ee0dcfc349c0ac01429a8e451b01a9e79f5f3b",
+        "bytes": 889228,
+        "file": "Bravura.otf"
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/steinbergmedia/bravura/37b194378b710cc40e406ab6c4b07608bb9548ae/redist/OFL.txt",
+        "sha256": "c24929be7028026a65ee8894da1e3c36d2a4ccce0548d9ba8ba64509f46319ee",
+        "bytes": 4420,
+        "file": "OFL.txt"
+      },
+      "metadata": {
+        "url": "https://raw.githubusercontent.com/steinbergmedia/bravura/37b194378b710cc40e406ab6c4b07608bb9548ae/redist/Bravura.json",
+        "sha256": "489fb4d734fc0b72a3cc601b50ebdf0bf8c57802ab9893e52ce030b86bf2ce11",
+        "bytes": 1256995,
+        "file": "Bravura.json"
+      }
+    },
+    {
+      "id": "cjk",
+      "repository": "notofonts/noto-cjk",
+      "commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
+      "font": {
+        "file": "NotoSansCJKsc-Black.otf",
+        "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Black.otf",
+        "bytes": 17797908,
+        "sha256": "2267c4a0312d267dff8c0d1609948f7d949a3da8be3e126f5e2690cb9cc883b4"
+      },
+      "license": {
+        "file": "OFL.txt",
+        "url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/LICENSE",
+        "bytes": 4301,
+        "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+      }
+    }
+  ]
+}

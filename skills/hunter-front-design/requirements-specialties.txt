@@ -1,0 +1,15 @@
+# Tested together with Python 3.12; isolate from existing production font environments.
+fonttools[woff]==4.68.0
+fontmake==3.12.2
+fontbakery==1.1.0
+opentype-sanitizer==9.2.0
+ttfautohint-py==0.6.1
+freetype-py==2.3.0
+verovio==6.4.1
+uharfbuzz==0.57.0
+skia-pathops==0.9.2
+ufoLib2==0.19.1
+glyphsLib==6.17.2
+Pillow==13.0.0
+pypdf==7.1.0
+PyYAML==6.0.3

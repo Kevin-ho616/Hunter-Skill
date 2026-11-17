@@ -116,6 +116,7 @@ class FontData:
         self.upm = self.font['head'].unitsPerEm
         self._polys, self._bounds = {}, {}
         self._hb = None
+        self._run_face = None
 
     def bounds(self, name):
         if name not in self._bounds:
@@ -175,6 +176,52 @@ class FontData:
         hb.shape(self._hb, buffer, features or {})
         return [(i.codepoint, p.x_advance, p.y_advance, p.x_offset, p.y_offset)
                 for i, p in zip(buffer.glyph_infos, buffer.glyph_positions)]
+
+    def shape_run(self, text, features=None, language=None, script=None, direction=None, variations=None):
+        """Expose script conditions and codepoint clusters without changing legacy shape()."""
+        import uharfbuzz as hb
+        if not isinstance(text, str) or not text:
+            raise ValueError('Shaping needs nonempty Unicode text.')
+        if direction is not None and direction not in ('ltr', 'rtl', 'ttb', 'btt'):
+            raise ValueError('direction must be ltr, rtl, ttb or btt.')
+        if script is not None and not re.fullmatch(r'[A-Za-z]{4}', script):
+            raise ValueError('script must be a four-letter ISO 15924 tag.')
+        if language is not None and not re.fullmatch(r'[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*', language):
+            raise ValueError('language must be an explicit language tag.')
+        for tag, value in (features or {}).items():
+            if not re.fullmatch(r'[A-Za-z0-9]{4}', tag) or not isinstance(value, (int, bool)) or not 0 <= value <= 65535:
+                raise ValueError('Features need four-character tags and integer/bool values.')
+        axes = {a.axisTag: a for a in self.font['fvar'].axes} if 'fvar' in self.font else {}
+        location = {tag: a.defaultValue for tag, a in axes.items()}
+        for tag, value in (variations or {}).items():
+            if tag not in axes or isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                raise ValueError('Variation needs a known axis and finite coordinate: ' + str(tag))
+            if not axes[tag].minValue <= value <= axes[tag].maxValue:
+                raise ValueError('Variation coordinate outside declared range: ' + tag)
+            location[tag] = value
+        if self._run_face is None:
+            self._run_face = hb.Face(self.sfnt_bytes())
+        font = hb.Font(self._run_face)
+        font.scale = (self.upm, self.upm)
+        if location:
+            font.set_variations(location)
+        buffer = hb.Buffer()
+        buffer.add_str(text)
+        if language is not None:
+            buffer.language = language
+        if script is not None:
+            buffer.script = script
+        if direction is not None:
+            buffer.direction = direction
+        buffer.guess_segment_properties()
+        hb.shape(font, buffer, features or {})
+        glyphs = [{'gid': i.codepoint, 'name': self.font.getGlyphName(i.codepoint), 'cluster': i.cluster,
+                   'x_advance': p.x_advance, 'y_advance': p.y_advance, 'x_offset': p.x_offset, 'y_offset': p.y_offset}
+                  for i, p in zip(buffer.glyph_infos, buffer.glyph_positions)]
+        return {'text': text, 'language': buffer.language, 'script': buffer.script, 'direction': buffer.direction,
+                'features': features or {}, 'variations': location, 'cluster_units': 'Unicode codepoint indices',
+                'units_per_em': self.upm, 'glyphs': glyphs,
+                'advance': [sum(g['x_advance'] for g in glyphs), sum(g['y_advance'] for g in glyphs)]}
 
 
 def font_measurements(face):
