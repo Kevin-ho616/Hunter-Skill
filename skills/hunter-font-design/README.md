@@ -1,4 +1,4 @@
-# 猎人字体设计 · Hunter Front Design
+# 猎人字体设计 · Hunter Font Design
 
 把一句风格要求，逐步变成可审校、可试排、可导出的字体。这套 Skill 来自 Hunter Block 字体的真实设计与反复修订。
 
@@ -9,10 +9,10 @@
 需先安装 Node.js 22.20 或以上版本（包含 `npx`），在终端执行：
 
 ```bash
-npx -y skills@latest add Kevin-ho616/Hunter-Skill --skill hunter-front-design -g -y
+npx -y skills@latest add Kevin-ho616/Hunter-Skill --skill hunter-font-design -g -y
 ```
 
-该命令全局安装本 Skill，并跳过交互确认。安装后，在助手中调用 `$hunter-front-design`；字体制作所需的其他工具与依赖按下文准备。安装环境与参数见 [Skills CLI 官方说明](https://github.com/vercel-labs/skills#install-a-skill)。
+该命令全局安装本 Skill，并跳过交互确认。安装后，在助手中调用 `$hunter-font-design`；字体制作所需的其他工具与依赖按下文准备。安装环境与参数见 [Skills CLI 官方说明](https://github.com/vercel-labs/skills#install-a-skill)。
 
 ## 内容
 
@@ -34,10 +34,10 @@ Skill 是提供给 AI 编程助手的工作方法和工具，不是一个按下�
 
 ## 在 Codex 中使用
 
-可使用上方命令安装；也可手动下载本仓库，将整个 `hunter-front-design` 文件夹放入 Codex 当前配置的 Skill 加载目录，保留 `assets`、`scripts`、`references`、`agents`。在助手可识别 Skill 后调用：
+可使用上方命令安装；也可手动下载本仓库，将整个 `hunter-font-design` 文件夹放入 Codex 当前配置的 Skill 加载目录，保留 `assets`、`scripts`、`references`、`agents`。在助手可识别 Skill 后调用：
 
 ```text
-使用 $hunter-front-design，帮我设计一套用于海报标题的英文字体。
+使用 $hunter-font-design，帮我设计一套用于海报标题的英文字体。
 希望厚重、简约，字形略高但不要过窄。
 确认需求与风格后，先用同一组样字生成 A/B/C 三张概念参考图。
 等我直观比较并选定方向后，再做设计原则和真实网格控制字。

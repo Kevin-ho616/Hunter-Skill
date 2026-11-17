@@ -9,7 +9,7 @@
 **随当前字体交付：**使用项目中已有 fontTools 的 Python：
 
 ```bash
-python /absolute/path/to/hunter-front-design/scripts/create_proof.py "/project/fonts/Family-Heavy.ttf" "/project/proof-v001"
+python /absolute/path/to/hunter-font-design/scripts/create_proof.py "/project/fonts/Family-Heavy.ttf" "/project/proof-v001"
 ```
 
 脚本复制工具和字体原件，生成 `font-config.js` 与 `font-info.json`；字体不改写、不安装、不上传。后者记录名称、版本、SHA-256、原 UPM、完整 Unicode cmap、参考线来源、部分字符的真实轮廓边界/占位，以及已声明的特性。目标须是新目录；重新导出后生成新的版本目录，不覆盖已有审校证据。
@@ -63,7 +63,7 @@ TrueType 的浏览器字面测量可能使用 `glyf` 包围盒并叠加 `hmtx` �
 自动化环境有 Playwright 和 Chrome 时：
 
 ```bash
-node /absolute/path/to/hunter-front-design/scripts/check_proof.cjs "/project/proof-v001"
+node /absolute/path/to/hunter-font-design/scripts/check_proof.cjs "/project/proof-v001"
 ```
 
 它验证默认字体实际加载/下载字节、测量与源度量、同尺度网格、主要输入与模式交互、错误导入保护、缺字、离线行为、桌面两种模式滚动时控制区不移动、矮屏控件可达性、移动端溢出，并保存截图与 JSON 报告。优先复用环境已有依赖；否则用可用浏览器逐项操作，不为截图测试新装整套依赖。

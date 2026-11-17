@@ -1,12 +1,12 @@
 ---
-name: hunter-front-design
+name: hunter-font-design
 description: "设计、修订并交付可安装的字体：新设计先确认风格、生成三案效果供用户选择，选定后制定设计原则，用网格呈现控制样字，分组扩展字符集，执行测量校准、光学审校与工程验收，导出 TTF/OTF 和按需的网页格式，配套离线试排工具与自动技术字样册；完成后可按用户选择制作技术展示与应用场景海报。适用于从参考图或风格要求制作字体、逐字修形、字库审校和自有字体推广；普通选字体或海报排版不需要整套流程。"
 metadata:
-  english-name: "Hunter Front Design"
+  english-name: "Hunter Font Design"
   short-description: "原创字体设计、测量审校、工程验收、试排与技术字样册"
 ---
 
-# 猎人字体设计 · Hunter Front Design
+# 猎人字体设计 · Hunter Font Design
 
 把风格要求变成可复查的轮廓规则，再变成真实字体。网格、样张、字体文件和试排页面都必须指向同一版本；概念图不能冒充字体文件的实际效果。
 
@@ -136,7 +136,7 @@ metadata:
 读 [试排工具用法与边界](references/proof-tool.md)。可直接复制 `assets/proof-tool/` 离线导入字体；有构建字体时，优先运行：
 
 ```bash
-python /absolute/path/to/hunter-front-design/scripts/create_proof.py "/project/fonts/Family-Heavy.ttf" "/project/proof-v001"
+python /absolute/path/to/hunter-font-design/scripts/create_proof.py "/project/fonts/Family-Heavy.ttf" "/project/proof-v001"
 ```
 
 输出是完整本地工具，包含当前字体原件、真实 cmap、度量来源与 SHA-256。目标目录须不存在，防止覆盖旧审校证据。用项目已有含 fontTools 的 Python 环境运行；不依赖 SOLID A 目录。
