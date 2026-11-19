@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import io
 import json
+import math
 from pathlib import Path
 import statistics
 import sys
@@ -162,6 +163,63 @@ def image_report(path, text, cap_char='H', xheight_chars='x', stem_chars='n', ca
     return result
 
 
+def probe_report(path, probes):
+    """Read named, manually placed edges and cuts on a high-contrast image."""
+    from PIL import Image
+
+    spec = json.loads(Path(probes).read_text(encoding='utf-8'))
+    if not isinstance(spec, dict) or not isinstance(spec.get('probes'), list) or not spec['probes']:
+        raise ValueError('Declare a nonempty probes array.')
+    background = spec.get('background', 'light')
+    if background not in ('light', 'dark'):
+        raise ValueError('background must be light or dark.')
+    raw = Path(path).read_bytes()
+    with Image.open(io.BytesIO(raw)) as original:
+        rgba = original.convert('RGBA')
+        backdrop = Image.new('RGBA', rgba.size, 'white' if background == 'light' else 'black')
+        backdrop.alpha_composite(rgba)
+    gray = backdrop.convert('L')
+    pixels = gray.load()
+    result = {}
+    for probe in spec['probes']:
+        if not isinstance(probe, dict):
+            raise ValueError('Each probe must be an object.')
+        name, kind = probe.get('id'), probe.get('kind')
+        if not isinstance(name, str) or not name.strip() or name in result or kind not in ('edge', 'cut'):
+            raise ValueError('Use unique nonempty probe IDs and kind edge or cut.')
+        start, end = probe.get('start'), probe.get('end')
+        for point in (start, end):
+            if (not isinstance(point, list) or len(point) != 2 or
+                    any(type(v) not in (float, int) or not 0 <= v < size for v, size in zip(point, gray.size))):
+                raise ValueError(f'{name}: endpoints must be finite pixel positions inside the image.')
+        dx, dy = end[0] - start[0], end[1] - start[1]
+        length = math.hypot(dx, dy)
+        if length < 1:
+            raise ValueError(f'{name}: the probe must be at least one pixel long.')
+        row = {'kind': kind, 'start': start, 'end': end, 'length_px': round(length, 3),
+               'angle_deg_y_up': round(math.degrees(math.atan2(-dy, dx)), 3)}
+        if kind == 'cut':
+            steps = math.ceil(length * 2)
+            runs = []
+            run_start, last = 0, None
+            for i in range(steps):
+                fraction = (i + .5) / steps
+                dark = pixels[int(start[0] + dx*fraction), int(start[1] + dy*fraction)] < 128
+                ink = dark if background == 'light' else not dark
+                if ink != last:
+                    if last is not None:
+                        runs.append((last, run_start, i))
+                    run_start, last = i, ink
+            runs.append((last, run_start, steps))
+            row['runs'] = [{'type': 'ink' if ink else 'space', 'offset_px': round(a*length/steps, 3),
+                            'length_px': round((b-a)*length/steps, 3)} for ink,a,b in runs]
+        result[name] = row
+    return {'schema_version': 1, 'kind': 'reference_probes', 'source': {'path': str(Path(path).resolve()),
+            'sha256': hashlib.sha256(raw).hexdigest(), 'size_px': gray.size}, 'background': background,
+            'probes': result, 'notes': ['Edge angles come from annotated endpoints. Cuts sample binary ink at intervals of at most 0.5 px.',
+                                      'Label roles and select comparable features before deriving a design rule.']}
+
+
 def calibrate(path, px, output):
     from PIL import Image, ImageDraw, ImageFont
     face = FontData(path)
@@ -194,7 +252,7 @@ def calibrate(path, px, output):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='kind',required=True)
-    for kind in ('font','image','calibrate'):
+    for kind in ('font','image','calibrate','probe'):
         p = sub.add_parser(kind)
         p.add_argument('source',type=Path)
         p.add_argument('--out',type=Path,required=True)
@@ -206,6 +264,8 @@ def main():
             p.add_argument('--calibration',type=Path)
         if kind == 'calibrate':
             p.add_argument('--px',type=float,default=200)
+        if kind == 'probe':
+            p.add_argument('--probes',type=Path,required=True)
     args = parser.parse_args()
     if args.out.exists():
         parser.error('Output already exists; use a fresh versioned path.')
@@ -213,6 +273,8 @@ def main():
         result = font_report(args.source)
     elif args.kind == 'image':
         result = image_report(args.source,args.text,args.cap_char,args.xheight_chars,args.stem_chars,args.calibration)
+    elif args.kind == 'probe':
+        result = probe_report(args.source,args.probes)
     else:
         if not 8 <= args.px <= 1000:
             parser.error('--px must be between 8 and 1000.')

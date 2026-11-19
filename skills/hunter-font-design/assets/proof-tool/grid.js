@@ -17,11 +17,11 @@
   zoom.className = 'glyph-zoom-dialog';
   zoom.setAttribute('aria-labelledby', 'glyph-zoom-title');
   zoom.setAttribute('aria-describedby', 'glyph-zoom-help');
-  zoom.innerHTML = '<div class="glyph-zoom-head"><h2 id="glyph-zoom-title"></h2><button type="button" autofocus>关闭</button></div><p id="glyph-zoom-help">已放大，可滚动查看细节。按 Esc 关闭。</p><div class="glyph-zoom-stage"></div><div class="glyph-zoom-metrics"></div>';
+  zoom.innerHTML = '<div class="glyph-zoom-head"><h2 id="glyph-zoom-title"></h2><button type="button" id="glyph-edit-trigger">编辑轮廓</button><button type="button" id="glyph-zoom-close" autofocus>关闭</button></div><p id="glyph-zoom-help">已放大，可滚动查看细节。按 Esc 关闭。</p><div class="glyph-zoom-stage"></div><div class="glyph-zoom-metrics"></div>';
   document.body.append(zoom);
   const zoomStage = zoom.querySelector('.glyph-zoom-stage');
   let zoomOpener;
-  zoom.querySelector('button').addEventListener('click', () => zoom.close());
+  zoom.querySelector('#glyph-zoom-close').addEventListener('click', () => zoom.close());
   zoom.addEventListener('click', event => { if (event.target === zoom) zoom.close(); });
   zoom.addEventListener('close', () => {
     zoomStage.replaceChildren();
@@ -49,6 +49,10 @@
     zoom.querySelector('.glyph-zoom-metrics').replaceChildren(metrics.cloneNode(true));
     zoomStage.replaceChildren(enlarged);
     zoomOpener = opener;
+    zoom.querySelector('#glyph-edit-trigger').onclick = () => {
+      zoom.close();
+      window.fontEditor?.open(char, false, opener);
+    };
     zoom.showModal();
     zoomStage.scrollTo(0, 0);
   }

@@ -4,8 +4,11 @@ import argparse
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import shutil
+import shlex
+import sys
 
 from fontTools.pens.boundsPen import BoundsPen, ControlBoundsPen
 from fontTools.ttLib import TTFont
@@ -94,6 +97,16 @@ def create_proof(source, output):
     info = inspect_font(source, raw)
     template = Path(__file__).resolve().parents[1] / 'assets/proof-tool'
     shutil.copytree(template, output)
+    runtime = output / 'editor-runtime'
+    runtime.mkdir()
+    for name in ('serve_editor.py', 'glyph_editor.py', 'create_proof.py'):
+        shutil.copy2(Path(__file__).resolve().parent / name, runtime / name)
+    launcher = output / '打开字体编辑器.command'
+    launcher.write_text('#!/bin/zsh\ncd -- "$(dirname -- "$0")"\nexec ' + shlex.quote(sys.executable)
+                        + ' ./editor-runtime/serve_editor.py . --open\n', encoding='utf-8')
+    launcher.chmod(0o755)
+    target = {'threadId': os.environ.get('CODEX_THREAD_ID'), 'codexExecutable': shutil.which('codex')}
+    (output / 'codex-target.json').write_text(json.dumps(target, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     (output / 'fonts').mkdir()
     (output / info['file']).write_bytes(raw)
     (output / 'font-info.json').write_text(json.dumps(info, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
@@ -102,7 +115,7 @@ def create_proof(source, output):
     (output / 'font-config.js').write_text('window.FONT_PROOF_CONFIG = ' + json.dumps(config, ensure_ascii=True) + ';\n', encoding='utf-8')
     index = output / 'index.html'
     markup = index.read_text(encoding='utf-8').replace('./font-config.js', './font-config.js?v=' + info['sha256'][:12])
-    for asset in ('grid.js', 'grid.css'):
+    for asset in ('grid.js', 'grid.css', 'editor-model.js', 'editor.js', 'editor.css'):
         digest = hashlib.sha256((output / asset).read_bytes()).hexdigest()[:12]
         markup = markup.replace('./' + asset, './' + asset + '?v=' + digest)
     index.write_text(markup, encoding='utf-8')

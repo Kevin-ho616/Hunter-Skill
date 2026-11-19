@@ -26,6 +26,7 @@ npx -y skills@latest add Kevin-ho616/Hunter-Skill --skill hunter-font-design -g 
 - [工程与封装](references/engineering-packaging.md)：命名、编码、字偶、真实 TTF/OTF、WOFF2/WOFF 与验证边界。
 - [版权与许可](references/copyright-and-license.md)：填写版权方与授权资料，在构建源写入，并逐字重、逐格式回读检查；开源底字保留原版权和许可，修改者署名另行追加。
 - [试排工具](references/proof-tool.md)：离线输入文字、调整排版、查看同尺度网格。
+- [2.0 钢笔与节点编辑](references/glyph-editor.md)：空白/参考图绘制，精修真实单字，保存可重开的源稿并导出新字体。
 - [通用验收与技术字样册](references/automated-checks-and-book.md)：检查真实字体，生成同版本的字符表、字号阶梯、字偶对照与 PDF。
 - [中文衍生字库](references/cjk-derived.md)：选择开源骨架定制路线时，核对来源许可、汉字结构、约定覆盖与中文试排。
 - [宣传展示](references/promotion-posters.md)：技术样张、应用海报、实际字面行距、透明 Logo 与字体参与构图。
@@ -51,6 +52,8 @@ Skill 是提供给 AI 编程助手的工作方法和工具，不是一个按下�
 ## 单独使用离线试排工具
 
 浏览器打开 [assets/proof-tool/index.html](assets/proof-tool/index.html)，点击“载入字体”，选择自己的 TTF、OTF、WOFF 或 WOFF2。字体和输入文字在本机处理；无须启动服务器。浏览器仍需支持相应字体格式。
+
+2.0 的轮廓编辑使用生成包中的 `打开字体编辑器.command` 启动本地服务。顶部“钢笔绘制”从空白/参考底图开始；网格单字放大窗的“编辑轮廓”读取真实字形。支持锚点、控制柄、坐标、增删点、直线/曲线、内腔与撤销；保存 JSON 源稿可带原字体重开，导出后以真实新字体试排。当前回写静态 glyf/CFF 及其网页容器；可变、彩色和 CID CFF 等边界见[编辑说明](references/glyph-editor.md)。
 
 支持字号、行距、字间距、段距、宽度、对齐、字偶与标准连字开关，以及基线、大写线、小写线、字面框和边距。网格与参数只改变显示，不修改字体轮廓。通过文件选择临时导入的字体尚未解析完整字符映射，缺字可能由系统回退；不能把显示成功当成字符覆盖证明。
 
