@@ -18,6 +18,8 @@ npx -y skills@latest add Kevin-ho616/Hunter-Skill --skill hunter-font-design -g 
 - [喵掌勺 · miao-zhang-shao](skills/miao-zhang-shao/SKILL.md)：黑白英短猫美食喜剧，从菜品策划、LibTV 视频制作到品牌封面。
 - [产品手册分层排版 · product-manual-layout](skills/product-manual-layout/SKILL.md)：产品手册、操作手册、宣传册和产品目录的分层排版，支持按需交付 INDD／IDML、AI 与 PDF。
 - [品牌 VI 手册 · brand-vi-manual](skills/brand-vi-manual/SKILL.md)：将定稿 Logo 与品牌简报扩展为 16:9 PPTX 商业 VI 手册，涵盖基础规范、应用设计与场景 Mockup。
+- [歌词写作 · lyric-writing](skills/lyric-writing/SKILL.md) 支持中文原创歌词创作、修改、评析和教学，覆盖段落结构、押韵与可唱性。
+- [关键词学习 · keyword-learning](skills/keyword-learning/README.md) 用关键词图谱建立领域认知，通过练习和迁移测试检验理解。附带生成 Markdown 学习工作区的 Python 脚本。
 
 ## 使用
 

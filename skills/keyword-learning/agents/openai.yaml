@@ -1,0 +1,7 @@
+interface:
+  display_name: "关键词学习"
+  short_description: "用快速定向、宽领域图谱、机制深挖和迁移练习进入陌生领域"
+  default_prompt: "Use $keyword-learning to orient me quickly, build a broad domain atlas and causal spine, teach the first concepts through worked examples, and verify transfer for a domain I want to understand."
+
+policy:
+  allow_implicit_invocation: true
