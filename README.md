@@ -10,26 +10,26 @@
 npx -y skills@latest add Kevin-ho616/Hunter-Skill --skill hunter-font-design -g -y
 ```
 
-该命令全局安装猎人字体设计 Skill，并跳过交互确认。安装后，在助手中调用 `$hunter-font-design`。使用示例与依赖见 [字体 Skill README](skills/hunter-font-design/README.md)，安装环境与参数见 [Skills CLI 官方说明](https://github.com/vercel-labs/skills#install-a-skill)。
+该命令全局安装猎人字体设计 Skill，并跳过交互确认。安装后，在助手中调用 `$hunter-font-design`。使用示例与依赖见 [字体 Skill README](hunter-font-design/README.md)，安装环境与参数见 [Skills CLI 官方说明](https://github.com/vercel-labs/skills#install-a-skill)。
 
 ## 已收录
 
-- [猎人字体设计 · Hunter Font Design](skills/hunter-font-design/README.md)：确认需求与风格后，先出 A/B/C 参考图选样，再做设计规则、网格控制字、全字符光学审校、工程验收、字体封装、离线试排与技术字样册；宣传海报按需制作。
-- [喵掌勺 · miao-zhang-shao](skills/miao-zhang-shao/SKILL.md)：黑白英短猫美食喜剧，从菜品策划、LibTV 视频制作到品牌封面。
-- [产品手册分层排版 · product-manual-layout](skills/product-manual-layout/SKILL.md)：产品手册、操作手册、宣传册和产品目录的分层排版，支持按需交付 INDD／IDML、AI 与 PDF。
-- [品牌 VI 手册 · brand-vi-manual](skills/brand-vi-manual/SKILL.md)：将定稿 Logo 与品牌简报扩展为 16:9 PPTX 商业 VI 手册，涵盖基础规范、应用设计与场景 Mockup。
-- [歌词写作 · lyric-writing](skills/lyric-writing/SKILL.md) 支持中文原创歌词创作、修改、评析和教学，覆盖段落结构、押韵与可唱性。
-- [关键词学习 · keyword-learning](skills/keyword-learning/README.md) 用关键词图谱建立领域认知，通过练习和迁移测试检验理解。附带生成 Markdown 学习工作区的 Python 脚本。
+- [猎人字体设计 · Hunter Font Design](hunter-font-design/README.md)：确认需求与风格后，先出 A/B/C 参考图选样，再做设计规则、网格控制字、全字符光学审校、工程验收、字体封装、离线试排与技术字样册；宣传海报按需制作。
+- [喵掌勺 · miao-zhang-shao](miao-zhang-shao/SKILL.md)：黑白英短猫美食喜剧，从菜品策划、LibTV 视频制作到品牌封面。
+- [产品手册分层排版 · product-manual-layout](product-manual-layout/SKILL.md)：产品手册、操作手册、宣传册和产品目录的分层排版，支持按需交付 INDD／IDML、AI 与 PDF。
+- [品牌 VI 手册 · brand-vi-manual](brand-vi-manual/SKILL.md)：将定稿 Logo 与品牌简报扩展为 16:9 PPTX 商业 VI 手册，涵盖基础规范、应用设计与场景 Mockup。
+- [歌词写作 · lyric-writing](lyric-writing/SKILL.md) 支持中文原创歌词创作、修改、评析和教学，覆盖段落结构、押韵与可唱性。
+- [关键词学习 · keyword-learning](keyword-learning/README.md) 用关键词图谱建立领域认知，通过练习和迁移测试检验理解。附带生成 Markdown 学习工作区的 Python 脚本。
 
 ## 使用
 
-将 `skills/` 下所需 Skill 的整个文件夹放入你的 Skill 加载目录，保留其中的附带文件和目录。
+将仓库根目录下所需 Skill 的整个文件夹放入你的 Skill 加载目录，保留其中的附带文件和目录。
 
 ### 喵掌勺
 
 - 视频制作依赖可用的 LibTV 连接及相应模型权限；封面制作依赖图像生成工具。
 - 完整封面流程还依赖单独安装的 `video-cover-design` Skill。本仓库原样保存本地源文件，其中指向该依赖的链接是作者本机绝对路径；在其他环境中使用时，需按实际安装位置解析。
-- 裁切检查脚本需要 Python 3 和 Pillow。可在 `skills/miao-zhang-shao/` 目录运行 `python3 scripts/test_crop_cover.py` 检查裁切几何、像素保留和防覆盖行为。
+- 裁切检查脚本需要 Python 3 和 Pillow。可在 `miao-zhang-shao/` 目录运行 `python3 scripts/test_crop_cover.py` 检查裁切几何、像素保留和防覆盖行为。
 
 ### 产品手册分层排版
 
@@ -41,4 +41,4 @@ npx -y skills@latest add Kevin-ho616/Hunter-Skill --skill hunter-font-design -g 
 
 ### 猎人字体设计
 
-完整复制 `skills/hunter-font-design/` 后调用 `$hunter-font-design`。新设计默认先确认需求与风格，再用可用的图像生成能力提供 A/B/C 三张概念参考图，待用户直观比较并选定后继续。参考图用于选方向，尚非可安装字体。已验证流程以拉丁字体为主；离线试排页面可直接打开，测量、工程验收与技术字样册工具按用途准备依赖。使用示例、依赖与 MIT 许可范围见该目录的 [README](skills/hunter-font-design/README.md)。
+完整复制 `hunter-font-design/` 后调用 `$hunter-font-design`。新设计默认先确认需求与风格，再用可用的图像生成能力提供 A/B/C 三张概念参考图，待用户直观比较并选定后继续。参考图用于选方向，尚非可安装字体。已验证流程以拉丁字体为主；离线试排页面可直接打开，测量、工程验收与技术字样册工具按用途准备依赖。使用示例、依赖与 MIT 许可范围见该目录的 [README](hunter-font-design/README.md)。
